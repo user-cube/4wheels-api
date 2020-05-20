@@ -1,16 +1,16 @@
 package pt.ua.tqs.fourwheels.repositories;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import pt.ua.tqs.fourwheels.entities.Profile;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 class ProfileRepositoryTest {
     private ProfileRepository repository;
     private Profile dummy;
-    @Before
+    @BeforeEach
     void setUp() {
         dummy = new Profile();
         dummy.setType("Vendedor");
