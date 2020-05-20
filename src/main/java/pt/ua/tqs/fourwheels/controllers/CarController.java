@@ -16,7 +16,9 @@ public class CarController {
     private CarRepository carRepository;
 
     @GetMapping("/<id>/")
-    public @ResponseBody Optional<Car> getInfo(@RequestParam(value = "ID") String id){
+    public @ResponseBody
+    Optional<Car> getInfo(@RequestParam(value = "ID") String id) {
         return carRepository.findById(Integer.parseInt(id));
 
+    }
 }
