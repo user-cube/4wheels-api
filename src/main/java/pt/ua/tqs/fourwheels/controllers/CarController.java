@@ -22,9 +22,8 @@ public class CarController {
         try {
             return Mono.just(ResponseEntity.ok(carRepository.findById(Integer.parseInt(id))));
         } catch (IllegalArgumentException e) {
-            return Mono.just(new ResponseEntity<>("Car not found!", HttpStatus.NOT_FOUND));
+            //return Mono.just(new ResponseEntity<>("Car not found!", HttpStatus.NOT_FOUND));  //not working, trying to
+            // figure out a fix
         }
     }
-
-
 }
