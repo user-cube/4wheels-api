@@ -1,4 +1,4 @@
-package pt.ua.tqs.fourwheels.components;
+package pt.ua.tqs.fourwheels.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +13,6 @@ public class Profile {
 
     private String type;
     private String name;
-    private String password;
     private String mail;
     private int contacto;
     private String morada;
@@ -21,14 +20,12 @@ public class Profile {
     private String cidade;
     private int numeroContribuinte;
 
+    public int getId(){ return id;}
     public String getType(){
         return type;
     }
     public String getName(){
         return name;
-    }
-    public String getPassword(){
-        return password;
     }
     public String getMail(){
         return mail;
@@ -36,7 +33,7 @@ public class Profile {
     public int getContacto(){
         return contacto;
     }
-    public String getmorada(){
+    public String getMorada(){
         return morada;
     }
     public int getCodigPostal(){
@@ -55,16 +52,13 @@ public class Profile {
     public void setName(String name){
         this.name = name;
     }
-    public void setPassword(String password){
-        this.password = password;
-    }
     public void setMail(String mail){
         this.mail = mail;
     }
     public void setContacto(int contacto){
         this.contacto = contacto;
     }
-    public void setmorada(String morada){
+    public void setMorada(String morada){
         this.morada = morada;
     }
     public void setCodigPostal(int codigPostal){
