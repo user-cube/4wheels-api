@@ -24,6 +24,7 @@ public class CarController {
         } catch (IllegalArgumentException e) {
             //return Mono.just(new ResponseEntity<>("Car not found!", HttpStatus.NOT_FOUND));  //not working, trying to
             // figure out a fix
+            return null;
         }
     }
 }
