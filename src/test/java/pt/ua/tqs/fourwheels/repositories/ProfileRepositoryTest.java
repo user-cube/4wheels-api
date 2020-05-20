@@ -4,7 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import pt.ua.tqs.fourwheels.entities.Profile;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.*;
+
 
 @SpringBootTest
 class ProfileRepositoryTest {
@@ -26,26 +28,27 @@ class ProfileRepositoryTest {
     void addToRepository(){
         repository.save(dummy);
         Profile prf = repository.findById(dummy.getId()).get();
-        assertThat(prf.getName()).isEqualTo(dummy.getName());
-        assertThat(prf.getType()).isEqualTo(dummy.getType());
-        assertThat(prf.getCidade()).isEqualTo(dummy.getCidade());
-        assertThat(prf.getCodigPostal()).isEqualTo(dummy.getCodigPostal());
-        assertThat(prf.getContacto()).isEqualTo(dummy.getContacto());
-        assertThat(prf.getMail()).isEqualTo(dummy.getMail());
-        assertThat(prf.getMorada()).isEqualTo(dummy.getMorada());
-        assertThat(prf.getNumeroContribuinte()).isEqualTo(dummy.getNumeroContribuinte());
+        assertEquals(prf.getName(), dummy.getName());
+        assertEquals(prf.getType(), dummy.getType());
+        assertEquals(prf.getCidade(), dummy.getCidade());
+        assertEquals(prf.getCodigPostal(), dummy.getCodigPostal());
+        assertEquals(prf.getContacto(), dummy.getContacto());
+        assertEquals(prf.getMail(), dummy.getMail());
+        assertEquals(prf.getMorada(), dummy.getMorada());
+        assertEquals(prf.getNumeroContribuinte(), dummy.getNumeroContribuinte());
     }
     @Test
     void checkIfExistsRepository(){
         repository.save(dummy);
-        assertThat(repository.equals(dummy)).isTrue();
-        assertThat(repository.existsById(dummy.getId())).isTrue();
+        assertEquals(repository.equals(dummy), true);
+        assertEquals(repository.existsById(dummy.getId()), true);
     }
     @Test
-    void checkIfExistsRepository(){
+    void checkIfDeletedRepository(){
         repository.save(dummy);
+        assertEquals(repository.existsById(dummy.getId()), true);
         repository.deleteById(dummy.getId());
-        assertThat(repository.existsById(dummy.getId())).isFalse();
+        assertEquals(repository.existsById(dummy.getId()), false);
     }
 
 }

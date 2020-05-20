@@ -3,7 +3,8 @@ package pt.ua.tqs.fourwheels.entities;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import static org.junit.Assert.assertEquals;
+
+import static org.junit.Assert.*;
 
 @SpringBootTest
 class ProfileTest {
@@ -24,94 +25,94 @@ class ProfileTest {
     }
     @Test
     void getId() {
-        assertThat(get.getId() >= 0).isEqualTo(true);
+        assertEquals(get.getId() >= 0,true);
     }
 
     @Test
     void getType() {
-        assertThat(get.getType()).isEqualTo("Vendedor");
+        assertEquals(get.getType(), "Vendedor");
     }
 
     @Test
     void getName() {
-        assertThat(get.getName()).isEqualTo("EUSOU Lesias");
+        assertEquals(get.getName(), "EUSOU Lesias");
     }
 
     @Test
     void getMail() {
-        assertThat(get.getMail()).isEqualTo("lmao@mail.com");
+        assertEquals(get.getMail(), "lmao@mail.com");
     }
 
     @Test
     void getContacto() {
-        assertThat(get.getContacto()).isEqualTo(999999999);
+        assertEquals(get.getContacto(), 999999999);
     }
 
     @Test
     void getMorada() {
-        assertThat(get.getMorada()).isEqualTo("Rua perfeita");
+        assertEquals(get.getMorada(), "Rua perfeita");
     }
 
     @Test
     void getCodigPostal() {
-        assertThat(get.getCodigPostal()).isEqualTo(555);
+        assertEquals(get.getCodigPostal(), 555);
     }
 
     @Test
     void getCidade() {
-        assertThat(get.getType()).isEqualTo("Porto");
+        assertEquals(get.getType(), "Porto");
     }
 
     @Test
     void getNumeroContribuinte() {
-        assertThat(get.getType()).isEqualTo(9412);
+        assertEquals(get.getType(), 9412);
     }
 
     @Test
     void setType() {
         set.setType("Vendedor");
-        assertThat(set.getType()).isEqualTo("Vendedor");
+        assertEquals(set.getType(), "Vendedor");
     }
 
     @Test
     void setName() {
         set.setName("DummyTest");
-        assertThat(set.getName()).isEqualTo("DummyTest");
+        assertEquals(set.getName(), "DummyTest");
     }
 
     @Test
     void setMail() {
         set.setMail("dummy@Test.This");
-        assertThat(set.getMail()).isEqualTo("dummy@Test.This");
+        assertEquals(set.getMail(), "dummy@Test.This");
     }
 
     @Test
     void setContacto() {
         set.setContacto(913913913);
-        assertThat(set.getContacto()).isEqualTo(913913913);
+        assertEquals(set.getContacto(), 913913913);
     }
 
     @Test
     void setMorada() {
         set.setMorada("Rua Falsa");
-        assertThat(set.getMorada()).isEqualTo("Rua Falsa");
+        assertEquals(set.getMorada(), "Rua Falsa");
     }
 
     @Test
     void setCodigPostal() {
         set.setCodigPostal(678798);
-        assertThat(set.getCodigPostal()).isEqualTo(678798);
+        assertEquals(set.getCodigPostal(), 678798);
     }
 
     @Test
     void setCidade() {
         set.setCidade("Nowhere");
-        assertThat(set.getCidade()).isEqualTo("Nowhere");
+        assertEquals(set.getCidade(), "Nowhere");
     }
 
     @Test
     void setNumeroContribuinte() {
         set.setNumeroContribuinte(555);
-        assertThat(set.getNumeroContribuinte()).isEqualTo(555);
+        assertEquals(set.getNumeroContribuinte(), 555);
     }
 }
