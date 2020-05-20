@@ -22,3 +22,13 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           SPRING_PORT: ${{ secrets.SPRING_PORT }}
           SONAR: ${{ secrets.SONAR }}
+      - name: Sonarqube
+        run: mvn verify sonar:sonar
+        env:
+          MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+          MYSQL_ENDPOINT: ${{ secrets.MYSQL_ENDPOINT }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          SPRING_PORT: ${{ secrets.SPRING_PORT }}
+          SONAR: ${{ secrets.SONAR }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
