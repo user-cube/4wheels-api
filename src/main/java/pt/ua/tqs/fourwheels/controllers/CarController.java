@@ -54,7 +54,15 @@ public class CarController {
     )
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public Car insertCars(@RequestBody Car car){
-        return carRepository.save(car);
+        Car newCar = new Car();
+        newCar.setModel(car.getModel());
+        newCar.setBrand(car.getBrand());
+        newCar.setYear(car.getYear());
+        newCar.setMonth(car.getMonth());
+        newCar.setDescription(car.getDescription());
+        newCar.setTypeOfFuel(car.getTypeOfFuel());
+        newCar.setKilometers(car.getKilometers());
+        return carRepository.save(newCar);
     }
 
 }
