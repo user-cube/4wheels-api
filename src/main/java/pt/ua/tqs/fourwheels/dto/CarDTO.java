@@ -12,4 +12,12 @@ import pt.ua.tqs.fourwheels.entities.Car;
 @ToString
 public class CarDTO {
     private Car car;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
 }
