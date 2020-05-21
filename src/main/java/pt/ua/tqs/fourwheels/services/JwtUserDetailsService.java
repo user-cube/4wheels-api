@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pt.ua.tqs.fourwheels.models.UserModel;
@@ -24,7 +23,7 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
-    Logger logger = LogManager.getLogger(JwtUserDetailsService.class);
+    private Logger logger = LogManager.getLogger(JwtUserDetailsService.class);
     @Override
     public UserDetails loadUserByUsername(String username){
         Userm user = authentication.findByUsername(username);
