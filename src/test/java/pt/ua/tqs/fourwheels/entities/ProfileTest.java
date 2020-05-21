@@ -1,6 +1,5 @@
 package pt.ua.tqs.fourwheels.entities;
 
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -9,10 +8,11 @@ import static org.junit.Assert.*;
 
 @WebMvcTest(value = ProfileTest.class)
 class ProfileTest {
-    Profile set;
-    Profile get;
+    private Profile set;
+    private Profile get;
+
     @BeforeEach
-    void setUp(){
+    public void setUp(){
         set = new Profile();
         get = new Profile();
         get.setId(1);
@@ -26,94 +26,94 @@ class ProfileTest {
         get.setNumeroContribuinte(9412);
     }
     @Test
-    void getId() {
+    public void getId() {
         assertEquals(get.getId() >= 0,true);
     }
 
     @Test
-    void getType() {
+    public void getType() {
         assertEquals(get.getType(), "Vendedor");
     }
 
     @Test
-    void getName() {
+    public void getName() {
         assertEquals(get.getName(), "EUSOU Lesias");
     }
 
     @Test
-    void getMail() {
+    public void getMail() {
         assertEquals(get.getMail(), "lmao@mail.com");
     }
 
     @Test
-    void getContacto() {
+    public void getContacto() {
         assertEquals(get.getContacto(), 999999999);
     }
 
     @Test
-    void getMorada() {
+    public void getMorada() {
         assertEquals(get.getMorada(), "Rua perfeita");
     }
 
     @Test
-    void getCodigPostal() {
+    public void getCodigPostal() {
         assertEquals(get.getCodigPostal(), 555);
     }
 
     @Test
-    void getCidade() {
+    public void getCidade() {
         assertEquals(get.getCidade(), "Porto");
     }
 
     @Test
-    void getNumeroContribuinte() {
+    public void getNumeroContribuinte() {
         assertEquals(get.getNumeroContribuinte(), 9412);
     }
 
     @Test
-    void setType() {
+    public void setType() {
         set.setType("Vendedor");
         assertEquals(set.getType(), "Vendedor");
     }
 
     @Test
-    void setName() {
+    public void setName() {
         set.setName("DummyTest");
         assertEquals(set.getName(), "DummyTest");
     }
 
     @Test
-    void setMail() {
+    public void setMail() {
         set.setMail("dummy@Test.This");
         assertEquals(set.getMail(), "dummy@Test.This");
     }
 
     @Test
-    void setContacto() {
+    public void setContacto() {
         set.setContacto(913913913);
         assertEquals(set.getContacto(), 913913913);
     }
 
     @Test
-    void setMorada() {
+    public void setMorada() {
         set.setMorada("Rua Falsa");
         assertEquals(set.getMorada(), "Rua Falsa");
     }
 
     @Test
-    void setCodigPostal() {
+    public void setCodigPostal() {
         set.setCodigPostal(678798);
         assertEquals(set.getCodigPostal(), 678798);
     }
 
     @Test
-    void setCidade() {
+    public void setCidade() {
         set.setCidade("Nowhere");
         assertEquals(set.getCidade(), "Nowhere");
     }
 
     @Test
-    void setNumeroContribuinte() {
+    public void setNumeroContribuinte() {
         set.setNumeroContribuinte(555);
         assertEquals(set.getNumeroContribuinte(), 555);
     }

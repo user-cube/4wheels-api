@@ -3,7 +3,6 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
@@ -13,6 +12,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
+
     private ProfileRepository profileRepository;
 
     public ProfileController(ProfileRepository profileRepository){
@@ -27,7 +27,7 @@ public class ProfileController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     }
     )
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/{id}")
     public @ResponseBody Optional<Profile> getInfo(@PathVariable("id") int id){
         return profileRepository.findById(id);
     }
@@ -41,7 +41,7 @@ public class ProfileController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     }
     )
-    @RequestMapping(value = "/", method = RequestMethod.POST)
+    @PostMapping(value = "/")
     public Profile insertProfile(@RequestBody Profile user){
         return profileRepository.save(user);
     }
