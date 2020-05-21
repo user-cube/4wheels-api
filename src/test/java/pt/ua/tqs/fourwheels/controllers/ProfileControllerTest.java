@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 import static org.hamcrest.Matchers.hasKey;
@@ -28,11 +29,13 @@ class ProfileControllerTest {
 
     @MockBean
     private ProfileRepository profileRepository;
+    @MockBean
+    private JwtTokenUtil jwtTokenUtil;
     private Profile profile;
 
     @BeforeEach
     public void setUp() {
-        mck = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository))
+        mck = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository, jwtTokenUtil))
                 .alwaysExpect(forwardedUrl(null))
                 .build();
     }
