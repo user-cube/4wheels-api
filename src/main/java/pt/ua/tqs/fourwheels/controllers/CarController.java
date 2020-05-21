@@ -9,14 +9,19 @@ import pt.ua.tqs.fourwheels.dto.CarDTO;
 import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/car")
 
 public class CarController {
-    @Autowired
     private CarRepository carRepository;
+
+    public CarController(CarRepository carRepository) {
+        this.carRepository = carRepository;
+    }
 
     @ApiOperation(value = "Get car details for a specific car.", response = Iterable.class)
     @ApiResponses(value = {
@@ -53,9 +58,10 @@ public class CarController {
     }
     )
     @PostMapping(value = "/")
-    public Car insertCar(@RequestBody CarDTO car){
-        System.out.println(car.getCar());
-        return carRepository.save(car.getCar());
+    public List<Car> insertCar(@RequestBody CarDTO car){
+        List<Car> myList = new ArrayList<>();
+        myList.add(carRepository.save(car.getCar()));
+        return myList;
     }
 
 }
