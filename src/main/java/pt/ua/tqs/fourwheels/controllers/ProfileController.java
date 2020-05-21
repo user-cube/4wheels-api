@@ -26,7 +26,22 @@ public class ProfileController {
     }
     )
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public @ResponseBody Optional<Profile> getInfo(@PathVariable int id){
+    public @ResponseBody Optional<Profile> getInfo(@PathVariable("id") int id){
         return userRepository.findById(id);
     }
+
+
+    @ApiOperation(value = "Insert a profile on the database.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully inserted user profile information."),
+            @ApiResponse(code = 401, message = "You are not authorized to insert the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @RequestMapping(value = "/", method = RequestMethod.POST)
+    public Profile insertCars(@RequestBody Profile user){
+        return userRepository.save(user);
+    }
+
 }
