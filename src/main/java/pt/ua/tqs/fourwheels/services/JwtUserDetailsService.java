@@ -2,6 +2,8 @@ package pt.ua.tqs.fourwheels.services;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +15,6 @@ import pt.ua.tqs.fourwheels.entities.Userm;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
@@ -23,12 +24,13 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
-    private Logger logger = LogManager.getLogger(JwtUserDetailsService.class);
+    private Logger logger = LogManager.getLogger(JwtUserDetailsService.class.getName());
+    private static final Marker USER_MARKER = MarkerManager.getMarker("USER");
     @Override
     public UserDetails loadUserByUsername(String username){
         Userm user = authentication.findByUsername(username);
         if (user == null) {
-            logger.info("User not found with username: " + username);
+            logger.info(USER_MARKER , "User not found with username: {}", username);
             return null;
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
