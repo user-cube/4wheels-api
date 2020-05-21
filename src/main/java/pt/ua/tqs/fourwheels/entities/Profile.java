@@ -18,11 +18,23 @@ public class Profile {
     private String morada;
     private int codigPostal;
     private String cidade;
+    private int numeroContribuinte;
 
     public Profile() {
     }
 
-    private int numeroContribuinte;
+    public Profile(Integer id, String type, String name, String mail, int contacto, String morada, int codigPostal, String cidade, int numeroContribuinte) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.mail = mail;
+        this.contacto = contacto;
+        this.morada = morada;
+        this.codigPostal = codigPostal;
+        this.cidade = cidade;
+        this.numeroContribuinte = numeroContribuinte;
+    }
+
     public int getId(){ return id;}
     public String getType(){
         return type;

@@ -11,58 +11,40 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeAll;
-import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-import pt.ua.tqs.fourwheels.services.ProfileService;
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(value = ProfileController.class)
 class ProfileControllerTest {
 
-    private static Profile p1;
     @Autowired
     private MockMvc mck;
 
     @MockBean
-    private ProfileService profileService;
-
-    @MockBean
     private ProfileRepository profileRepository;
+    private Profile profile;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        mck = MockMvcBuilders.standaloneSetup(new ProfileController())
+        mck = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository))
                 .alwaysExpect(forwardedUrl(null))
                 .build();
     }
 
-    @BeforeAll
-    public static void init() {
-        p1 = new Profile();
-        p1.setId(1);
-        p1.setName("Hello");
-    }
-
     @Test
     public void getInform() throws Exception {
-        mck.perform(get("/profile/" + 1)).andDo(print());
-
+        profile = new Profile(1, "fasf", "sdfs", "ruicoelho@ua.pt", 910000000, "ewefwe", 3810, "aveiro", 211111111);
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        mck.perform(get("/profile/" + 1)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasKey("id")))
+                .andExpect(jsonPath("$", hasKey("name")))
+                .andExpect(jsonPath("$", hasKey("mail")));
     }
-
-/*
-    @Autowired
-    private ProfileController controller;
-
-    @Test
-    void getExtraInfo(){
-        System.out.println(controller.getInfo(1));
-    }
-*/
 }
