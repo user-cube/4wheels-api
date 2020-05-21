@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import pt.ua.tqs.fourwheels.dto.CarDTO;
 import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 
@@ -52,16 +53,9 @@ public class CarController {
     }
     )
     @PostMapping(value = "/")
-    public Car insertCars(@RequestBody Car car){
-        Car newCar = new Car();
-        newCar.setModel(car.getModel());
-        newCar.setBrand(car.getBrand());
-        newCar.setYear(car.getYear());
-        newCar.setMonth(car.getMonth());
-        newCar.setDescription(car.getDescription());
-        newCar.setTypeOfFuel(car.getTypeOfFuel());
-        newCar.setKilometers(car.getKilometers());
-        return carRepository.save(newCar);
+    public Car insertCar(@RequestBody CarDTO car){
+        System.out.println(car.getCar());
+        return carRepository.save(car.getCar());
     }
 
 }
