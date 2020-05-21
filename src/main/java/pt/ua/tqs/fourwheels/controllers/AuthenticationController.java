@@ -17,6 +17,8 @@ import pt.ua.tqs.fourwheels.services.JwtUserDetailsService;
 import pt.ua.tqs.fourwheels.authentication.JwtRequest;
 import pt.ua.tqs.fourwheels.authentication.JwtResponse;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 @RestController
 @CrossOrigin
@@ -30,6 +32,8 @@ public class AuthenticationController {
 
     @Autowired
     private JwtUserDetailsService userDetailsService;
+
+    Logger logger = LogManager.getLogger(AuthenticationController.class);
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
@@ -53,9 +57,9 @@ public class AuthenticationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (DisabledException e) {
-            System.err.println(e.toString());
+            logger.info(e.toString());
         } catch (BadCredentialsException e) {
-            System.err.println(e.toString());
+            logger.info(e.toString());
         }
     }
 }
