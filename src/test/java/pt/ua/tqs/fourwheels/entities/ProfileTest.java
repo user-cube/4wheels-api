@@ -1,6 +1,7 @@
 package pt.ua.tqs.fourwheels.entities;
 
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
@@ -10,10 +11,11 @@ import static org.junit.Assert.*;
 class ProfileTest {
     Profile set;
     Profile get;
-    @Before
+    @BeforeEach
     void setUp(){
-        Profile set = new Profile();
-        Profile get = new Profile();
+        set = new Profile();
+        get = new Profile();
+        get.setId(1);
         get.setType("Vendedor");
         get.setCidade("Porto");
         get.setCodigPostal(555);
@@ -60,12 +62,12 @@ class ProfileTest {
 
     @Test
     void getCidade() {
-        assertEquals(get.getType(), "Porto");
+        assertEquals(get.getCidade(), "Porto");
     }
 
     @Test
     void getNumeroContribuinte() {
-        assertEquals(get.getType(), 9412);
+        assertEquals(get.getNumeroContribuinte(), 9412);
     }
 
     @Test

@@ -1,7 +1,10 @@
 package pt.ua.tqs.fourwheels.repositories;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import pt.ua.tqs.fourwheels.entities.Profile;
 
@@ -10,11 +13,18 @@ import static org.junit.Assert.*;
 
 @WebMvcTest(value = ProfileRepositoryTest.class)
 class ProfileRepositoryTest {
-    private ProfileRepository repository;
+    @Autowired
+    private ProfileRepository userRepository;
+    @Test
+    void injectedComponentAreNotNullTest() {
+        assertNotEquals(null, userRepository);
+    }
+    /*
     private Profile dummy;
     @BeforeEach
     void setUp() {
         dummy = new Profile();
+        dummy.setId(2);
         dummy.setType("Vendedor");
         dummy.setCidade("Porto");
         dummy.setCodigPostal(555);
@@ -23,11 +33,17 @@ class ProfileRepositoryTest {
         dummy.setMorada("Rua perfeita");
         dummy.setName("EUSOU Lesias");
         dummy.setNumeroContribuinte(9412);
+        System.out.println(userRepository.existsById(2));
+        userRepository.save(dummy);
+        System.out.println(userRepository.findById(2));
+    }
+    @AfterEach
+    void tierDown() {
+        userRepository.deleteById(dummy.getId());
     }
     @Test
     void addToRepository(){
-        repository.save(dummy);
-        Profile prf = repository.findById(dummy.getId()).get();
+        Profile prf = userRepository.findById(dummy.getId()).get();
         assertEquals(prf.getName(), dummy.getName());
         assertEquals(prf.getType(), dummy.getType());
         assertEquals(prf.getCidade(), dummy.getCidade());
@@ -39,20 +55,14 @@ class ProfileRepositoryTest {
     }
     @Test
     void checkIfExistsRepository(){
-        repository.save(dummy);
-        assertEquals(repository.equals(dummy), true);
-        assertEquals(repository.existsById(dummy.getId()), true);
+        assertEquals(userRepository.equals(dummy), true);
+        assertEquals(userRepository.existsById(dummy.getId()), true);
     }
     @Test
     void checkIfDeletedRepository(){
-        repository.save(dummy);
-        assertEquals(repository.existsById(dummy.getId()), true);
-        repository.deleteById(dummy.getId());
-        assertEquals(repository.existsById(dummy.getId()), false);
-    }
-    @Test
-    void checkRepository(){
-        repository.findById(1);
-        assertEquals(repository.findById(1).get().getName(), "Rui Coelho");
-    }
+        assertEquals(userRepository.existsById(dummy.getId()), true);
+        userRepository.deleteById(dummy.getId());
+        assertEquals(userRepository.existsById(dummy.getId()), false);
+        userRepository.save(dummy);
+    }*/
 }

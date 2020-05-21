@@ -3,38 +3,66 @@ package pt.ua.tqs.fourwheels.controllers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-
+import pt.ua.tqs.fourwheels.services.ProfileService;
+import static org.hamcrest.Matchers.hasKey;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(MockitoExtension.class)
+@WebMvcTest(value = ProfileController.class)
 class ProfileControllerTest {
 
-    @Mock(lenient = true)
-    private ProfileRepository repository;
+    private static Profile p1;
+    @Autowired
+    private MockMvc mck;
 
-    private int userID = 1;
-    @BeforeEach
-    void setUp(){
-        Profile dummy = new Profile();
-        dummy.setType("Vendedor");
-        dummy.setCidade("Porto");
-        dummy.setCodigPostal(555);
-        dummy.setContacto(999999999);
-        dummy.setMail("lmao@mail.com");
-        dummy.setMorada("Rua perfeita");
-        dummy.setName("EUSOU Lesias");
-        dummy.setNumeroContribuinte(9412);
-        userID = dummy.getId();
-        when(repository.findById(dummy.getId())).thenReturn(java.util.Optional.of(dummy));
+    @MockBean
+    private ProfileService profileService;
+
+    @MockBean
+    private ProfileRepository profileRepository;
+
+    @Before
+    public void setUp() {
+        mck = MockMvcBuilders.standaloneSetup(new ProfileController())
+                .alwaysExpect(forwardedUrl(null))
+                .build();
     }
+
+    @BeforeAll
+    public static void init() {
+        p1 = new Profile();
+        p1.setId(1);
+        p1.setName("Hello");
+    }
+
     @Test
-    void getInfo() {
-        Profile userProfile = repository.findById(userID).get();
-        assertEquals(userProfile.getName(), "EUSOU Lesias");
+    public void getInform() throws Exception {
+        mck.perform(get("/profile/" + 1)).andDo(print());
+
     }
+
+/*
+    @Autowired
+    private ProfileController controller;
+
+    @Test
+    void getExtraInfo(){
+        System.out.println(controller.getInfo(1));
+    }
+*/
 }

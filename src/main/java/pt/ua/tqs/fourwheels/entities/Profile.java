@@ -18,8 +18,11 @@ public class Profile {
     private String morada;
     private int codigPostal;
     private String cidade;
-    private int numeroContribuinte;
 
+    public Profile() {
+    }
+
+    private int numeroContribuinte;
     public int getId(){ return id;}
     public String getType(){
         return type;
@@ -46,6 +49,7 @@ public class Profile {
         return numeroContribuinte;
     }
 
+    public void setId(int id){this.id = id;}
     public void setType(String type){
         this.type = type;
     }

@@ -40,7 +40,7 @@ public class ProfileController {
     }
     )
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Profile insertCars(@RequestBody Profile user){
+    public Profile insertProfile(@RequestBody Profile user){
         return userRepository.save(user);
     }
 
