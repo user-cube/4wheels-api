@@ -9,4 +9,5 @@ import pt.ua.tqs.fourwheels.entities.Profile;
 @Repository
 public interface ProfileRepository extends CrudRepository<Profile, Integer> {
     Profile findByMail(String email);
+    Profile deleteByMail(String email);
 }
