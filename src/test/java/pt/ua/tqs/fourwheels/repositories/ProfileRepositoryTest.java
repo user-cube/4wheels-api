@@ -2,13 +2,13 @@ package pt.ua.tqs.fourwheels.repositories;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import pt.ua.tqs.fourwheels.entities.Profile;
 
 import static org.junit.Assert.*;
 
 
-@SpringBootTest
+@WebMvcTest(value = ProfileRepositoryTest.class)
 class ProfileRepositoryTest {
     private ProfileRepository repository;
     private Profile dummy;
@@ -50,5 +50,9 @@ class ProfileRepositoryTest {
         repository.deleteById(dummy.getId());
         assertEquals(repository.existsById(dummy.getId()), false);
     }
-
+    @Test
+    void checkRepository(){
+        repository.findById(1);
+        assertEquals(repository.findById(1).get().getName(), "Rui Coelho");
+    }
 }

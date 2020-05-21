@@ -1,16 +1,16 @@
 package pt.ua.tqs.fourwheels.entities;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
 import static org.junit.Assert.*;
 
-@SpringBootTest
+@WebMvcTest(value = ProfileTest.class)
 class ProfileTest {
     Profile set;
     Profile get;
-    @BeforeEach
+    @Before
     void setUp(){
         Profile set = new Profile();
         Profile get = new Profile();
