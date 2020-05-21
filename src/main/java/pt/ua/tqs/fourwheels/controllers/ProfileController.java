@@ -4,9 +4,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
+import pt.ua.tqs.fourwheels.authentication.JwtRequestFilter;
+import pt.ua.tqs.fourwheels.authentication.JwtResponse;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
@@ -14,7 +17,6 @@ import java.util.Optional;
 public class ProfileController {
 
     private ProfileRepository profileRepository;
-
     public ProfileController(ProfileRepository profileRepository){
         this.profileRepository = profileRepository;
     }
@@ -28,7 +30,8 @@ public class ProfileController {
     }
     )
     @GetMapping(value = "/{id}")
-    public @ResponseBody Optional<Profile> getInfo(@PathVariable("id") int id){
+    public @ResponseBody Optional<Profile> getInfo(@PathVariable("id") int id, HttpServletRequest request){
+        System.out.println(request.getHeader("Authorization"));
         return profileRepository.findById(id);
     }
 
