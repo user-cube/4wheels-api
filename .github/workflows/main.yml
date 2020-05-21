@@ -22,6 +22,7 @@ jobs:
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           SPRING_PORT: ${{ secrets.SPRING_PORT }}
           SONAR: ${{ secrets.SONAR }}
+          JWT_SECRET: ${{ secrets.JWT }}
       - name: Sonarqube
         run: mvn verify sonar:sonar
         env:
@@ -32,3 +33,4 @@ jobs:
           SPRING_PORT: ${{ secrets.SPRING_PORT }}
           SONAR: ${{ secrets.SONAR }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT }}
