@@ -5,11 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Column;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -31,6 +27,7 @@ public class Car {
     private int kilometers;
     private String typeOfFuel;
 
-
-
+    @ManyToOne
+    @JoinColumn(name="id", insertable = false, updatable = false)
+    private Profile user;
 }

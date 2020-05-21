@@ -16,14 +16,14 @@ class ProfileTest {
         set = new Profile();
         get = new Profile();
         get.setId(1);
-        get.setType("Vendedor");
-        get.setCidade("Porto");
-        get.setCodigPostal(555);
-        get.setContacto(999999999);
+        get.setType(1);
+        get.setCity("Porto");
+        get.setZipCode("555");
+        get.setContact(999999999);
         get.setMail("lmao@mail.com");
-        get.setMorada("Rua perfeita");
+        get.setAddress("Rua perfeita");
         get.setName("EUSOU Lesias");
-        get.setNumeroContribuinte(9412);
+        get.setNif(9412);
     }
     @Test
     public void getId() {
@@ -46,34 +46,34 @@ class ProfileTest {
     }
 
     @Test
-    public void getContacto() {
-        assertEquals(get.getContacto(), 999999999);
+    public void getContact() {
+        assertEquals(get.getContact(), 999999999);
     }
 
     @Test
-    public void getMorada() {
-        assertEquals(get.getMorada(), "Rua perfeita");
+    public void getAdress() {
+        assertEquals(get.getAddress(), "Rua perfeita");
     }
 
     @Test
-    public void getCodigPostal() {
-        assertEquals(get.getCodigPostal(), 555);
+    public void getZipCode() {
+        assertEquals(get.getZipCode(), "555");
     }
 
     @Test
-    public void getCidade() {
-        assertEquals(get.getCidade(), "Porto");
+    public void getCity() {
+        assertEquals(get.getCity(), "Porto");
     }
 
     @Test
-    public void getNumeroContribuinte() {
-        assertEquals(get.getNumeroContribuinte(), 9412);
+    public void getNif() {
+        assertEquals(get.getNif(), 9412);
     }
 
     @Test
     public void setType() {
-        set.setType("Vendedor");
-        assertEquals(set.getType(), "Vendedor");
+        set.setType(1);
+        assertEquals(set.getType(), 1);
     }
 
     @Test
@@ -89,32 +89,32 @@ class ProfileTest {
     }
 
     @Test
-    public void setContacto() {
-        set.setContacto(913913913);
-        assertEquals(set.getContacto(), 913913913);
+    public void setContact() {
+        set.setContact(913913913);
+        assertEquals(set.getContact(), 913913913);
     }
 
     @Test
-    public void setMorada() {
-        set.setMorada("Rua Falsa");
-        assertEquals(set.getMorada(), "Rua Falsa");
+    public void setAddress() {
+        set.setAddress("Rua Falsa");
+        assertEquals(set.getAddress(), "Rua Falsa");
     }
 
     @Test
-    public void setCodigPostal() {
-        set.setCodigPostal(678798);
-        assertEquals(set.getCodigPostal(), 678798);
+    public void setZipCode() {
+        set.setZipCode("678798");
+        assertEquals(set.getZipCode(), 678798);
     }
 
     @Test
-    public void setCidade() {
-        set.setCidade("Nowhere");
-        assertEquals(set.getCidade(), "Nowhere");
+    public void setCity() {
+        set.setCity("Nowhere");
+        assertEquals(set.getCity(), "Nowhere");
     }
 
     @Test
-    public void setNumeroContribuinte() {
-        set.setNumeroContribuinte(555);
-        assertEquals(set.getNumeroContribuinte(), 555);
+    public void setNif() {
+        set.setNif(555);
+        assertEquals(set.getNif(), 555);
     }
 }

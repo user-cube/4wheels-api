@@ -39,7 +39,7 @@ class ProfileControllerTest {
 
     @Test
     public void getInform() throws Exception {
-        profile = new Profile(1, "fasf", "sdfs", "ruicoelho@ua.pt", 910000000, "ewefwe", 3810, "aveiro", 211111111);
+        profile = new Profile(1, "sdfs", "ruicoelho@ua.pt", 910000000, "ewefwe", "3810", "aveiro", 211111111);
         Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
         mck.perform(get("/profile/" + 1)).andDo(print())
                 .andExpect(status().isOk())

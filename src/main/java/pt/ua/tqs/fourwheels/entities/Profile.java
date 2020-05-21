@@ -1,42 +1,44 @@
 package pt.ua.tqs.fourwheels.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import pt.ua.tqs.fourwheels.repositories.CarRepository;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 public class Profile {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
-
-    private String type;
+    private int type;
     private String name;
     private String mail;
-    private int contacto;
-    private String morada;
-    private int codigPostal;
-    private String cidade;
-    private int numeroContribuinte;
+    private int contact;
+    private String address;
+    private String zipCode;
+    private String city;
+    private int nif;
+    @OneToMany(mappedBy = "user")
+    private List<Car> favorites;
 
     public Profile() {
     }
 
-    public Profile(Integer id, String type, String name, String mail, int contacto, String morada, int codigPostal, String cidade, int numeroContribuinte) {
-        this.id = id;
+    public Profile(int type, String name, String mail, int contact, String address, String zipCode, String city, int nif) {
         this.type = type;
         this.name = name;
         this.mail = mail;
-        this.contacto = contacto;
-        this.morada = morada;
-        this.codigPostal = codigPostal;
-        this.cidade = cidade;
-        this.numeroContribuinte = numeroContribuinte;
+        this.contact = contact;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.nif = nif;
     }
 
     public int getId(){ return id;}
-    public String getType(){
+    public int getType(){
         return type;
     }
     public String getName(){
@@ -45,24 +47,24 @@ public class Profile {
     public String getMail(){
         return mail;
     }
-    public int getContacto(){
-        return contacto;
+    public int getContact(){
+        return contact;
     }
-    public String getMorada(){
-        return morada;
+    public String getAddress(){
+        return address;
     }
-    public int getCodigPostal(){
-        return codigPostal;
+    public String getZipCode(){
+        return zipCode;
     }
-    public String getCidade(){
-        return cidade;
+    public String getCity(){
+        return city;
     }
-    public int getNumeroContribuinte(){
-        return numeroContribuinte;
+    public int getNif(){
+        return nif;
     }
 
     public void setId(int id){this.id = id;}
-    public void setType(String type){
+    public void setType(int type){
         this.type = type;
     }
     public void setName(String name){
@@ -71,19 +73,19 @@ public class Profile {
     public void setMail(String mail){
         this.mail = mail;
     }
-    public void setContacto(int contacto){
-        this.contacto = contacto;
+    public void setContact(int contact){
+        this.contact = contact;
     }
-    public void setMorada(String morada){
-        this.morada = morada;
+    public void setAddress(String address){
+        this.address = address;
     }
-    public void setCodigPostal(int codigPostal){
-        this.codigPostal = codigPostal;
+    public void setZipCode(String zipCode){
+        this.zipCode = zipCode;
     }
-    public void setCidade(String cidade){
-        this.cidade = cidade;
+    public void setCity(String city){
+        this.city = city;
     }
-    public void setNumeroContribuinte(int numeroContribuinte){
-        this.numeroContribuinte = numeroContribuinte;
+    public void setNif(int nif){
+        this.nif = nif;
     }
 }
