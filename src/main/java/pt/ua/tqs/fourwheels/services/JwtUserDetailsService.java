@@ -30,6 +30,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         Userm user = authentication.findByUsername(username);
         if (user == null) {
             logger.info("User not found with username: " + username);
+            return null;
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
