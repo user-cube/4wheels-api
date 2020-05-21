@@ -1,9 +1,6 @@
 package pt.ua.tqs.fourwheels.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Car {
@@ -11,6 +8,8 @@ public class Car {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
+    @Column(columnDefinition = "TEXT")
+    private String photo;
     private String brand;
     private String model;
     private int year;
@@ -18,6 +17,7 @@ public class Car {
     private String description;
     private int kilometers;
     private String typeOfFuel;
+
 
     public Integer getId() {
         return id;
@@ -78,4 +78,8 @@ public class Car {
     public void setYear(int year) {
         this.year = year;
     }
+
+    public String getPhoto() { return photo; }
+
+    public void setPhoto(String photo) { this.photo = photo; }
 }
