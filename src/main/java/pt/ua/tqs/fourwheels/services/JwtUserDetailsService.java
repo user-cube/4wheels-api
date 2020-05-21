@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import pt.ua.tqs.fourwheels.models.UserModel;
 import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.entities.Userm;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -21,11 +24,12 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder bcryptEncoder;
 
+    Logger logger = LogManager.getLogger(JwtUserDetailsService.class);
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username){
         Userm user = authentication.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+            logger.info("User not found with username: " + username);
         }
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 new ArrayList<>());
