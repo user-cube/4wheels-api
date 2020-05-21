@@ -4,21 +4,21 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
-import pt.ua.tqs.fourwheels.authentication.JwtRequestFilter;
-import pt.ua.tqs.fourwheels.authentication.JwtResponse;
+import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
 
     private ProfileRepository profileRepository;
-    public ProfileController(ProfileRepository profileRepository){
+    private JwtTokenUtil jwtTokenUtil;
+    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
+        this.jwtTokenUtil = jwtTokenUtil;
     }
 
     @ApiOperation(value = "Get profile info for a specific user.", response = Iterable.class)
@@ -29,10 +29,14 @@ public class ProfileController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     }
     )
-    @GetMapping(value = "/{id}")
-    public @ResponseBody Optional<Profile> getInfo(@PathVariable("id") int id, HttpServletRequest request){
-        System.out.println(request.getHeader("Authorization"));
-        return profileRepository.findById(id);
+    @GetMapping(value = "/")
+    public @ResponseBody
+    Profile getInfo(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        System.out.println(token);
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        System.out.println(email);
+        return profileRepository.findByMail(email);
     }
 
 
