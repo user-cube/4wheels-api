@@ -18,7 +18,6 @@ public class Car {
     private int kilometers;
     private String typeOfFuel;
 
-
     public Integer getId() {
         return id;
     }

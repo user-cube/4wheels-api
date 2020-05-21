@@ -44,7 +44,7 @@ public class CarController {
         return carRepository.findAll();
     }
 
-    @ApiOperation(value = "Insert a on the database.", response = Iterable.class)
+    @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully inserted a car."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -53,8 +53,8 @@ public class CarController {
     }
     )
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Iterable<Car> insertCars(@RequestBody Car car){
-        return (Iterable<Car>) carRepository.save(car);
+    public Car insertCars(@RequestBody Car car){
+        return carRepository.save(car);
     }
 
 }
