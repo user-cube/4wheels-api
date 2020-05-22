@@ -20,11 +20,13 @@ public class Profile {
     private String zipCode;
     private String city;
     private int nif;
+    @Column(columnDefinition = "LONGTEXT")
+    private String photo;
 
     public Profile() {
     }
 
-    public Profile(int type, String name, String mail, int contact, String address, String zipCode, String city, int nif) {
+    public Profile(int type, String name, String mail, int contact, String address, String zipCode, String city, int nif, String photo) {
         this.type = type;
         this.name = name;
         this.mail = mail;
@@ -33,6 +35,15 @@ public class Profile {
         this.zipCode = zipCode;
         this.city = city;
         this.nif = nif;
+        this.photo = photo;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
     }
 
     public int getId(){ return id;}
