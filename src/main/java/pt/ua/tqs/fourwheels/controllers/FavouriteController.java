@@ -36,9 +36,9 @@ public class FavouriteController {
         return favouriteRepository.findByMail(email);
     }
 
-    @ApiOperation(value = "Get favourite cars by user.", response = Iterable.class)
+    @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved car details information."),
+            @ApiResponse(code = 200, message = "Successfully deleted car favourite  ."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
