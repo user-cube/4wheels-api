@@ -23,6 +23,7 @@ public class Car {
     private String model;
     private int year;
     private int month;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private int kilometers;
     private String typeOfFuel;
