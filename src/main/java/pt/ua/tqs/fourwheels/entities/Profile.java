@@ -1,16 +1,14 @@
 package pt.ua.tqs.fourwheels.entities;
-
-import pt.ua.tqs.fourwheels.repositories.CarRepository;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
 
 @Entity
 public class Profile {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
     private int type;
     private String name;
