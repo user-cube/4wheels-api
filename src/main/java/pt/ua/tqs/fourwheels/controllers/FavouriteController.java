@@ -30,10 +30,26 @@ public class FavouriteController {
     }
     )
     @GetMapping(value = "/")
-    public Favourite getCarInfo(HttpServletRequest request){
+    public Favourite getFavourites(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         return favouriteRepository.findByMail(email);
+    }
+
+    @ApiOperation(value = "Get favourite cars by user.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved car details information."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @DeleteMapping(value = "/{id}")
+    public void deleteFavourite(@PathVariable("id") int id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        System.out.println(email);
+        favouriteRepository.deleteByCarEqualsAndMailEquals(id, email);
     }
 
 }
