@@ -19,7 +19,6 @@ public class Favourite {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-
     private String mail;
     private int car;
 }

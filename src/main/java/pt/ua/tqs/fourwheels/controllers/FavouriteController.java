@@ -35,7 +35,7 @@ public class FavouriteController {
         String email = jwtTokenUtil.getUsernameFromToken(token);
         return favouriteRepository.findByMail(email);
     }
-
+    
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully deleted car favourite  ."),
