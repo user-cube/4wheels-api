@@ -11,7 +11,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import pt.ua.tqs.fourwheels.entities.Userm;
 
 import static java.util.Base64.getEncoder;
 
@@ -30,17 +29,16 @@ public class JwtTokenUtil implements Serializable {
         return Jwts.parser().setSigningKey(getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
     }
 
-    public Map<String, Object> getCredentialsFromToken(String token) {
-        Claims ca = getAllClaimsFromToken(token);
-        Map<String, Object> credentials = new HashMap<>();
-        credentials.put("email", ca.get("email"));
-        credentials.put("name", ca.get("name"));
-        credentials.put("home", ca.get("home"));
-        return credentials;
-    }
+//    public Map<String, Object> getCredentialsFromToken(String token) {
+//        Claims ca = getAllClaimsFromToken(token);
+//        Map<String, Object> credentials = new HashMap<>();
+//        credentials.put("email", ca.get("email"));
+//        credentials.put("name", ca.get("name"));
+//        credentials.put("home", ca.get("home"));
+//        return credentials;
+//    }
     public String getUsernameFromToken(String token) {
         Claims ca = getAllClaimsFromToken(token);
-        Map<String, Object> credentials = new HashMap<>();
         return ca.get("email").toString();
     }
 
