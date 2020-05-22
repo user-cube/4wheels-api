@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @WebMvcTest(value = ProfileTest.class)
 class ProfileTest {
