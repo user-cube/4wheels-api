@@ -26,8 +26,7 @@ public class Car {
     private String description;
     private int kilometers;
     private String typeOfFuel;
+    private String ownerMail;
+    private float price;
 
-    @ManyToOne
-    @JoinColumn(name="id", insertable = false, updatable = false)
-    private Profile user;
 }

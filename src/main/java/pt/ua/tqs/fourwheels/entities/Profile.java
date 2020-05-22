@@ -20,8 +20,6 @@ public class Profile {
     private String zipCode;
     private String city;
     private int nif;
-    @OneToMany(mappedBy = "user")
-    private List<Car> favorites;
 
     public Profile() {
     }

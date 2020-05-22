@@ -33,9 +33,7 @@ public class ProfileController {
     public @ResponseBody
     Profile getInfo(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
-        System.out.println(token);
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        System.out.println(email);
         return profileRepository.findByMail(email);
     }
 
