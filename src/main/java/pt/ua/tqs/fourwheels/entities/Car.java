@@ -17,7 +17,7 @@ public class Car {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String photo;
     private String brand;
     private String model;

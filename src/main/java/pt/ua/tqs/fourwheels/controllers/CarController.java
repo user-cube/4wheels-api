@@ -76,4 +76,56 @@ public class CarController {
         carRepository.deleteById(id);
     }
 
+    @ApiOperation(value = "Search a car by brand.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully search a car by brand."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/brand/{content}")
+    public Car searchByBrand(@PathVariable("content") String content){
+        return carRepository.findCarsByBrandContaining(content);
+    }
+
+    @ApiOperation(value = "Search a car by model.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully search a car by model."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/model/{content}")
+    public Car searchByModel(@PathVariable("content") String content){
+        return carRepository.findCarsByModelContaining(content);
+    }
+
+    @ApiOperation(value = "Search a car by year.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully search a car by year."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/year/{content}")
+    public Car searchByYear(@PathVariable("content") int content){
+        return carRepository.findCarsByYearEquals(content);
+    }
+
+    @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully search a car by fuel."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/fuel/{content}")
+    public Car searchByFuelType(@PathVariable("content") String content){
+        return carRepository.findCarsByTypeOfFuelEquals(content);
+    }
+
 }
