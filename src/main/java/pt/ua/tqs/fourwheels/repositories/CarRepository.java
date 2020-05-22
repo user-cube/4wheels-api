@@ -5,7 +5,4 @@ import pt.ua.tqs.fourwheels.entities.Car;
 
 
 public interface CarRepository extends CrudRepository<Car, Integer> {
-
-
-
 }

@@ -13,5 +13,5 @@ import java.util.List;
 @Repository
 public interface ProfileRepository extends CrudRepository<Profile, Integer> {
     Profile findByMail(String email);
-
+    Profile deleteByMail(String email);
 }

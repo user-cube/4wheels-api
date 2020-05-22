@@ -51,6 +51,19 @@ public class ProfileController {
         return profileRepository.save(user);
     }
 
-
+    @ApiOperation(value = "Delete a profile from the database.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully delete profile."),
+            @ApiResponse(code = 401, message = "You are not authorized to insert the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @DeleteMapping(value = "/")
+    public void deleteProfile(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        profileRepository.deleteByMail(email);
+    }
 
 }
