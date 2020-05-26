@@ -91,8 +91,10 @@ public class CarController {
     }
     )
     @GetMapping(value = "/brand/{content}")
-    public Car searchByBrand(@PathVariable("content") String content){
-        return carRepository.findCarsByBrandContaining(content);
+    public List<Car>  searchByBrand(@PathVariable("content") String content){
+        List<Car> myList = new ArrayList<>();
+        myList.add(carRepository.findCarsByBrandContaining(content));
+        return myList;
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -104,8 +106,10 @@ public class CarController {
     }
     )
     @GetMapping(value = "/model/{content}")
-    public Car searchByModel(@PathVariable("content") String content){
-        return carRepository.findCarsByModelContaining(content);
+    public List<Car> searchByModel(@PathVariable("content") String content){
+        List<Car> myList = new ArrayList<>();
+        myList.add(carRepository.findCarsByModelContaining(content));
+        return myList;
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -117,8 +121,10 @@ public class CarController {
     }
     )
     @GetMapping(value = "/year/{content}")
-    public Car searchByYear(@PathVariable("content") int content){
-        return carRepository.findCarsByYearEquals(content);
+    public List<Car> searchByYear(@PathVariable("content") int content){
+        List<Car> myList = new ArrayList<>();
+        myList.add(carRepository.findCarsByYearEquals(content));
+        return myList;
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -130,8 +136,10 @@ public class CarController {
     }
     )
     @GetMapping(value = "/fuel/{content}")
-    public Car searchByFuelType(@PathVariable("content") String content){
-        return carRepository.findCarsByTypeOfFuelEquals(content);
+    public List<Car> searchByFuelType(@PathVariable("content") String content){
+        List<Car> myList = new ArrayList<>();
+        myList.add(carRepository.findCarsByTypeOfFuelEquals(content));
+        return myList;
     }
 
 }
