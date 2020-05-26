@@ -92,9 +92,7 @@ public class CarController {
     )
     @GetMapping(value = "/brand/{content}")
     public List<Car>  searchByBrand(@PathVariable("content") String content){
-        List<Car> myList = new ArrayList<>();
-        myList.add(carRepository.findCarsByBrandContaining(content));
-        return myList;
+        return carRepository.findCarsByBrandContaining(content);
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -107,9 +105,7 @@ public class CarController {
     )
     @GetMapping(value = "/model/{content}")
     public List<Car> searchByModel(@PathVariable("content") String content){
-        List<Car> myList = new ArrayList<>();
-        myList.add(carRepository.findCarsByModelContaining(content));
-        return myList;
+        return carRepository.findCarsByModelContaining(content);
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -122,9 +118,7 @@ public class CarController {
     )
     @GetMapping(value = "/year/{content}")
     public List<Car> searchByYear(@PathVariable("content") int content){
-        List<Car> myList = new ArrayList<>();
-        myList.add(carRepository.findCarsByYearEquals(content));
-        return myList;
+        return carRepository.findCarsByYearEquals(content);
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -137,9 +131,7 @@ public class CarController {
     )
     @GetMapping(value = "/fuel/{content}")
     public List<Car> searchByFuelType(@PathVariable("content") String content){
-        List<Car> myList = new ArrayList<>();
-        myList.add(carRepository.findCarsByTypeOfFuelEquals(content));
-        return myList;
+        return carRepository.findCarsByTypeOfFuelEquals(content);
     }
 
 }
