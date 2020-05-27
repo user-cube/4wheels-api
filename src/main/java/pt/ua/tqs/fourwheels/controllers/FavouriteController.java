@@ -9,6 +9,7 @@ import pt.ua.tqs.fourwheels.entities.Favourite;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/favourite")
@@ -30,10 +31,10 @@ public class FavouriteController {
     }
     )
     @GetMapping(value = "/")
-    public Favourite getFavourites(HttpServletRequest request){
+    public List<Favourite> getFavourites(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        return favouriteRepository.findByMail(email);
+        return favouriteRepository.findAllByMail(email);
     }
     
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
