@@ -63,6 +63,9 @@ public class FavouriteController {
     public void addFavourite(@PathVariable("id") int id, HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        favouriteRepository.saveByCarEqualsAndMailEquals(id, email);
+        Favourite newFav = new Favourite();
+        newFav.setCar(id);
+        newFav.setMail(email);
+        favouriteRepository.save(newFav);
     }
 }

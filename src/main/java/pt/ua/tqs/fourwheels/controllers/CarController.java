@@ -70,7 +70,7 @@ public class CarController {
         return myList;
     }
 
-    @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
+    @ApiOperation(value = "Remove a car from the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully delete a car."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),

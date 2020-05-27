@@ -12,6 +12,4 @@ public interface FavouriteRepository extends CrudRepository<Favourite, Integer> 
     @Transactional
     void deleteByCarEqualsAndMailEquals(int id, String email);
 
-    @Transactional
-    void saveByCarEqualsAndMailEquals(int id, String email);
 }
