@@ -37,8 +37,8 @@ public class CarController {
     }
     )
     @GetMapping(value = "/{id}")
-    public Optional<Car> getCarInfo(@PathVariable("id") int id){
-        return carRepository.findById(id);
+    public Car getCarInfo(@PathVariable("id") int id){
+        return carRepository.findCarsById(id);
     }
 
     @ApiOperation(value = "Get all the cars on the database.", response = Iterable.class)
