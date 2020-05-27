@@ -3,11 +3,7 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Favourite;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
@@ -42,7 +38,7 @@ public class FavouriteController {
     
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully deleted car favourite  ."),
+            @ApiResponse(code = 200, message = "Successfully deleted car favourite."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
@@ -52,8 +48,21 @@ public class FavouriteController {
     public void deleteFavourite(@PathVariable("id") int id, HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        System.out.println(email);
         favouriteRepository.deleteByCarEqualsAndMailEquals(id, email);
     }
 
+    @ApiOperation(value = "Save a car in the user favourites list.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully saved a car favourite."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @PostMapping(value = "/{id}")
+    public void addFavourite(@PathVariable("id") int id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        favouriteRepository.saveByCarEqualsAndMailEquals(id, email);
+    }
 }
