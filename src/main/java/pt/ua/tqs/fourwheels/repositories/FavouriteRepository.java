@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface FavouriteRepository extends CrudRepository<Favourite, Integer> {
+
     List<Favourite> findAllByMail(String email);
+
     @Transactional
     void deleteByCarEqualsAndMailEquals(int id, String email);
 
