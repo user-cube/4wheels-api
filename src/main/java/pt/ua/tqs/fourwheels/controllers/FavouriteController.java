@@ -5,12 +5,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
-import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.entities.Favourite;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -36,9 +34,7 @@ public class FavouriteController {
     public List<Favourite> getFavourites(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
-        List<Favourite> myList = new ArrayList<>();
-        myList.add(favouriteRepository.findByMail(email));
-        return myList;
+        return favouriteRepository.findByMail(email);
     }
     
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
