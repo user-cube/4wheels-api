@@ -206,5 +206,21 @@ public class CarController {
         }
     }
 
+    @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved the list of cars for the owner."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendor")
+    public List<Car> markCarAsSold(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+
+        return carRepository.findCarsByOwnerMail(email);
+    }
+
 
 }
