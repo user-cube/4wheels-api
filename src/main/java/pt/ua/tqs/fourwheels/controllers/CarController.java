@@ -51,8 +51,8 @@ public class CarController {
     }
     )
     @GetMapping(value = "/")
-    public Iterable<Car> getAllCars(){
-        return carRepository.findAll();
+    public List<Car> getAllCars(){
+        return carRepository.findCarsByCarStateEquals("selling");
     }
 
     @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)

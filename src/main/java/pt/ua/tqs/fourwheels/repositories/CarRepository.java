@@ -13,4 +13,5 @@ public interface CarRepository extends CrudRepository<Car, Integer> {
     List<Car> findCarsByTypeOfFuelEquals(String fuelType);
     Car findCarsById(int id);
     List<Car> findCarsByOwnerMail(String email);
+    List<Car> findCarsByCarStateEquals(String state);
 }
