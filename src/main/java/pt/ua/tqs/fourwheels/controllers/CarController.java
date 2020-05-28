@@ -183,5 +183,28 @@ public class CarController {
         }
     }
 
+    @ApiOperation(value = "Mark car as sold.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully marked car as sold."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @PutMapping(value = "/{id}/sold")
+    public ResponseEntity<Car> markCarAsSold(@PathVariable("id") int id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+
+        Car updateCar = carRepository.findCarsById(id);
+
+        if(updateCar.getOwnerMail().equals(email)){
+            updateCar.setCarState("sold");
+            return ResponseEntity.ok(carRepository.save(updateCar));
+        }else {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+    }
+
 
 }
