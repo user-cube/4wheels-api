@@ -8,7 +8,7 @@ import javax.persistence.Column;
 @Entity
 public class Profile {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private int type;
     private String name;
