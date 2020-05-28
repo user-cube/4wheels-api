@@ -93,7 +93,7 @@ public class CarController {
     )
     @GetMapping(value = "/brand/{content}")
     public List<Car>  searchByBrand(@PathVariable("content") String content){
-        return carRepository.findCarsByBrandContaining(content);
+        return carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -106,7 +106,7 @@ public class CarController {
     )
     @GetMapping(value = "/model/{content}")
     public List<Car> searchByModel(@PathVariable("content") String content){
-        return carRepository.findCarsByModelContaining(content);
+        return carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -119,7 +119,7 @@ public class CarController {
     )
     @GetMapping(value = "/year/{content}")
     public List<Car> searchByYear(@PathVariable("content") int content){
-        return carRepository.findCarsByYearEquals(content);
+        return carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -132,14 +132,8 @@ public class CarController {
     )
     @GetMapping(value = "/fuel/{content}")
     public List<Car> searchByFuelType(@PathVariable("content") String content){
-        return carRepository.findCarsByTypeOfFuelEquals(content);
+        return carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling");
     }
-
-
-
-
-
-
 
 
     /**
