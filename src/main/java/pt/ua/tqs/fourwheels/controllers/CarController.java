@@ -136,6 +136,7 @@ public class CarController {
     }
 
 
+
     /**
      * Edit Specific Car
      * @param id
@@ -177,6 +178,12 @@ public class CarController {
         }
     }
 
+
+    /**
+     * Mark a car as sold.
+     * @param id
+     * @return
+     */
     @ApiOperation(value = "Mark car as sold.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully marked car as sold."),
@@ -185,7 +192,7 @@ public class CarController {
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     }
     )
-    @PutMapping(value = "/{id}/sold")
+    @PutMapping(value = "sold/{id}")
     public ResponseEntity<Car> markCarAsSold(@PathVariable("id") int id, HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
@@ -200,6 +207,11 @@ public class CarController {
         }
     }
 
+
+    /**
+     * List all the cars a owner as to sell.
+     * @return
+     */
     @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved the list of cars for the owner."),
