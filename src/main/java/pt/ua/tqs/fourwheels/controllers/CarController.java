@@ -70,7 +70,7 @@ public class CarController {
         return myList;
     }
 
-    @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
+    @ApiOperation(value = "Delete a car from the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully delete a car."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -221,7 +221,7 @@ public class CarController {
     }
     )
     @GetMapping(value = "/vendor")
-    public List<Car> markCarAsSold(HttpServletRequest request){
+    public List<Car> getAllCarsFromVendor(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
 
