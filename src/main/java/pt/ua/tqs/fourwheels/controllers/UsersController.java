@@ -3,17 +3,18 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -35,13 +36,14 @@ public class UsersController {
     }
     )
     @GetMapping(value = "/")
-    public ResponseEntity<Iterable<Profile>> getAllUsers(HttpServletRequest request){
+    public ResponseEntity<Iterable<Profile>> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
+        Pageable pageAndLimit = PageRequest.of(page, limit);
 
         if (user.getType() == 2) {
-            return ResponseEntity.ok(profileRepository.findAll());
+            return ResponseEntity.ok(profileRepository.findAll(pageAndLimit));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
@@ -56,13 +58,14 @@ public class UsersController {
     }
     )
     @GetMapping(value = "/buyers")
-    public ResponseEntity<Iterable<Profile>> getAllBuyers(HttpServletRequest request){
+    public ResponseEntity<List<Profile>> getAllBuyers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
 
+        Pageable pageAndLimit = PageRequest.of(page, limit);
         if (user.getType() == 2) {
-            return ResponseEntity.ok(profileRepository.findAllByTypeEquals(0));
+            return ResponseEntity.ok(profileRepository.findAllByTypeEquals(0, pageAndLimit));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
@@ -77,13 +80,14 @@ public class UsersController {
     }
     )
     @GetMapping(value = "/vendors")
-    public ResponseEntity<Iterable<Profile>> getAllVendors(HttpServletRequest request){
+    public ResponseEntity<List<Profile>> getAllVendors(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
+        Pageable pageAndLimit = PageRequest.of(page, limit);
 
         if (user.getType() == 2) {
-            return ResponseEntity.ok(profileRepository.findAllByTypeEquals(1));
+            return ResponseEntity.ok(profileRepository.findAllByTypeEquals(1, pageAndLimit));
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
