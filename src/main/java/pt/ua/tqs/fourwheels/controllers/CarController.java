@@ -3,6 +3,8 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,8 +53,9 @@ public class CarController {
     }
     )
     @GetMapping(value = "/")
-    public List<Car> getAllCars(){
-        return carRepository.findCarsByCarStateEquals("selling");
+    public List<Car> getAllCars(@RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+        return carRepository.findCarsByCarStateEquals("selling", pageAndLimit);
     }
 
     @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
@@ -92,8 +95,9 @@ public class CarController {
     }
     )
     @GetMapping(value = "/brand/{content}")
-    public List<Car>  searchByBrand(@PathVariable("content") String content){
-        return carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling");
+    public List<Car>  searchByBrand(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+        return carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling", pageAndLimit);
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -105,8 +109,9 @@ public class CarController {
     }
     )
     @GetMapping(value = "/model/{content}")
-    public List<Car> searchByModel(@PathVariable("content") String content){
-        return carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling");
+    public List<Car> searchByModel(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+        return carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling", pageAndLimit);
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -118,8 +123,9 @@ public class CarController {
     }
     )
     @GetMapping(value = "/year/{content}")
-    public List<Car> searchByYear(@PathVariable("content") int content){
-        return carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling");
+    public List<Car> searchByYear(@PathVariable("content") int content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+        return carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling", pageAndLimit);
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -131,8 +137,9 @@ public class CarController {
     }
     )
     @GetMapping(value = "/fuel/{content}")
-    public List<Car> searchByFuelType(@PathVariable("content") String content){
-        return carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling");
+    public List<Car> searchByFuelType(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+        return carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling", pageAndLimit);
     }
 
 
@@ -221,11 +228,12 @@ public class CarController {
     }
     )
     @GetMapping(value = "/vendor")
-    public List<Car> getAllCarsFromVendor(HttpServletRequest request){
+    public List<Car> getAllCarsFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
+        Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        return carRepository.findCarsByOwnerMail(email);
+        return carRepository.findCarsByOwnerMail(email, pageAndLimit);
     }
 
 
