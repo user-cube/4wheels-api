@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pt.ua.tqs.fourwheels.entities.Profile;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
 // CRUD refers Create, Read, Update, Delete
@@ -13,4 +14,6 @@ public interface ProfileRepository extends CrudRepository<Profile, Integer> {
     Profile findByMail(String email);
     @Transactional
     void deleteByMail(String email);
+
+    List<Profile> findAllByTypeEquals(int type);
 }
