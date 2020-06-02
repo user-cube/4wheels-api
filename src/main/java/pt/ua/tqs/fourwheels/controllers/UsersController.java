@@ -3,6 +3,7 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -36,14 +40,22 @@ public class UsersController {
     }
     )
     @GetMapping(value = "/")
-    public ResponseEntity<Iterable<Profile>> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
         if (user.getType() == 2) {
-            return ResponseEntity.ok(profileRepository.findAll(pageAndLimit));
+            Page<Profile> userPage = profileRepository.findAll(pageAndLimit);
+            int totalPages = userPage.getTotalPages();
+            List<Profile> userOfPage = userPage.getContent();
+
+            JSONObject json = new JSONObject();
+            json.put("data", userOfPage);
+            json.put("totalpages", totalPages);
+
+            return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
