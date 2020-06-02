@@ -256,7 +256,7 @@ public class CarController {
 
 
     /**
-     * List all the cars a owner as to sell.
+     * List all the cars a owner has to sell.
      * @return
      */
     @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
@@ -273,7 +273,6 @@ public class CarController {
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
-
         Page<Car> carPage =  carRepository.findCarsByOwnerMail(email, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
@@ -284,5 +283,59 @@ public class CarController {
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
+    /**
+     * List all the cars a owner has marked for sale.
+     * @return
+     */
+    @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved the list of cars for the owner."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendor/selling")
+    public ResponseEntity<JSONObject> getAllCarsOnSaleFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        Pageable pageAndLimit = PageRequest.of(page, limit);
 
+        Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
+
+    /**
+     * List all the cars a owner has marked for sale.
+     * @return
+     */
+    @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved the list of cars for the owner."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendor/sold")
+    public ResponseEntity<JSONObject> getAllCarsSoldFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        Pageable pageAndLimit = PageRequest.of(page, limit);
+
+        Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "sold", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+    }
 }
