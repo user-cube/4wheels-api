@@ -3,6 +3,8 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.json.simple.JSONObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.dto.CarDTO;
 import pt.ua.tqs.fourwheels.entities.Car;
+import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,9 +56,18 @@ public class CarController {
     }
     )
     @GetMapping(value = "/")
-    public List<Car> getAllCars(@RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> getAllCars(@RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        return carRepository.findCarsByCarStateEquals("selling", pageAndLimit);
+
+        Page<Car> carPage =  carRepository.findCarsByCarStateEquals("selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+
     }
 
     @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
@@ -95,9 +107,16 @@ public class CarController {
     }
     )
     @GetMapping(value = "/brand/{content}")
-    public List<Car>  searchByBrand(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject>  searchByBrand(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        return carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -109,9 +128,16 @@ public class CarController {
     }
     )
     @GetMapping(value = "/model/{content}")
-    public List<Car> searchByModel(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> searchByModel(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        return carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -123,9 +149,16 @@ public class CarController {
     }
     )
     @GetMapping(value = "/year/{content}")
-    public List<Car> searchByYear(@PathVariable("content") int content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> searchByYear(@PathVariable("content") int content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        return carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -137,9 +170,16 @@ public class CarController {
     }
     )
     @GetMapping(value = "/fuel/{content}")
-    public List<Car> searchByFuelType(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> searchByFuelType(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        return carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
 
@@ -167,18 +207,18 @@ public class CarController {
         Car optionalCar = carRepository.findCarsById(id);
 
         if(optionalCar.getOwnerMail().equals(email)){
-                optionalCar.setPhoto(newCar.getPhoto());
-                optionalCar.setBrand(newCar.getBrand());
-                optionalCar.setModel(newCar.getModel());
-                optionalCar.setYear(newCar.getYear());
-                optionalCar.setMonth(newCar.getMonth());
-                optionalCar.setDescription(newCar.getDescription());
-                optionalCar.setKilometers(newCar.getKilometers());
-                optionalCar.setTypeOfFuel(newCar.getTypeOfFuel());
-                optionalCar.setOwnerMail(newCar.getOwnerMail());
-                optionalCar.setPrice(newCar.getPrice());
+            optionalCar.setPhoto(newCar.getPhoto());
+            optionalCar.setBrand(newCar.getBrand());
+            optionalCar.setModel(newCar.getModel());
+            optionalCar.setYear(newCar.getYear());
+            optionalCar.setMonth(newCar.getMonth());
+            optionalCar.setDescription(newCar.getDescription());
+            optionalCar.setKilometers(newCar.getKilometers());
+            optionalCar.setTypeOfFuel(newCar.getTypeOfFuel());
+            optionalCar.setOwnerMail(newCar.getOwnerMail());
+            optionalCar.setPrice(newCar.getPrice());
 
-                return ResponseEntity.ok(carRepository.save(optionalCar));
+            return ResponseEntity.ok(carRepository.save(optionalCar));
 
         }else {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
@@ -228,12 +268,20 @@ public class CarController {
     }
     )
     @GetMapping(value = "/vendor")
-    public List<Car> getAllCarsFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    public ResponseEntity<JSONObject> getAllCarsFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         String token = request.getHeader("Authorization").split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        return carRepository.findCarsByOwnerMail(email, pageAndLimit);
+
+        Page<Car> carPage =  carRepository.findCarsByOwnerMail(email, pageAndLimit);
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+
+        JSONObject json = new JSONObject();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
 
