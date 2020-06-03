@@ -4,14 +4,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.entities.Profile;
-
-import javax.persistence.Tuple;
 import javax.transaction.Transactional;
-import java.util.HashMap;
 import java.util.List;
 
 // This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository

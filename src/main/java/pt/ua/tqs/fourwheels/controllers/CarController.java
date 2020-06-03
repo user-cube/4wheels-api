@@ -13,11 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.dto.CarDTO;
 import pt.ua.tqs.fourwheels.entities.Car;
-import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
