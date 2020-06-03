@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
-import pt.ua.tqs.fourwheels.dto.CarDTO;
+import pt.ua.tqs.fourwheels.models.CarModel;
 import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +76,7 @@ public class CarController {
     }
     )
     @PostMapping(value = "/")
-    public List<Car> insertCar(@RequestBody CarDTO car){
+    public List<Car> insertCar(@RequestBody CarModel car){
         List<Car> myList = new ArrayList<>();
         myList.add(carRepository.save(car.getCar()));
         return myList;
