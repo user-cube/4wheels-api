@@ -36,6 +36,19 @@ public class Profile {
         this.photo = photo;
     }
 
+    public Profile(Integer id, int type, String name, String mail, int contact, String address, String zipCode, String city, int nif, String photo) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.mail = mail;
+        this.contact = contact;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.nif = nif;
+        this.photo = photo;
+    }
+
     public String getPhoto() {
         return photo;
     }

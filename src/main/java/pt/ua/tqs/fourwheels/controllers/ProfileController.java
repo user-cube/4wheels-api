@@ -3,24 +3,35 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.json.simple.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
+import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private ProfileRepository profileRepository;
+    private Authentication authentication;
+    private JSONObject json = new JSONObject();
     private JwtTokenUtil jwtTokenUtil;
+    private ProfileRepository profileRepository;
+    private Logger logger = LogManager.getLogger(ProfileController.class);
 
-    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
+
+    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil, Authentication authentication){
         this.profileRepository = profileRepository;
         this.jwtTokenUtil = jwtTokenUtil;
+        this.authentication = authentication;
     }
 
     @ApiOperation(value = "Get profile info for a specific user.", response = Iterable.class)
@@ -32,11 +43,16 @@ public class ProfileController {
     }
     )
     @GetMapping(value = "/")
-    public @ResponseBody
-    Profile getInfo(HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        return profileRepository.findByMail(email);
+    public ResponseEntity getInfo(HttpServletRequest request){
+        json.put("error", "Bad credentials");
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1]; // Get token from header
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            return ResponseEntity.ok(profileRepository.findByMail(email));
+        } catch (Exception e){
+            logger.error(e.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 
 

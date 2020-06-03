@@ -26,37 +26,49 @@ public class JwtTokenUtil implements Serializable {
     private String expirationTime;
 
     public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+        } catch (Exception e){
+            return null;
+        }
     }
 
-//    public Map<String, Object> getCredentialsFromToken(String token) {
-//        Claims ca = getAllClaimsFromToken(token);
-//        Map<String, Object> credentials = new HashMap<>();
-//        credentials.put("email", ca.get("email"));
-//        credentials.put("name", ca.get("name"));
-//        credentials.put("home", ca.get("home"));
-//        return credentials;
-//    }
     public String getUsernameFromToken(String token) {
-        Claims ca = getAllClaimsFromToken(token);
-        return ca.get("email").toString();
+        try {
+            Claims ca = getAllClaimsFromToken(token);
+            return ca.get("email").toString();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     public Date getExpirationDateFromToken(String token) {
-        return getAllClaimsFromToken(token).getExpiration();
+        try {
+            return getAllClaimsFromToken(token).getExpiration();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        try {
+            final Date expiration = getExpirationDateFromToken(token);
+            return expiration.before(new Date());
+        } catch (Exception e){
+            return true;
+        }
     }
 
     public String generateToken(UserDetails user) {
-        Map<String, Object> claims = new HashMap<>();
-        Map<String, Object> headers = new HashMap<>();
-        claims.put("email", user.getUsername());
-        headers.put("typ", "JWT");
-        return doGenerateToken(claims, headers);
+        try {
+            Map<String, Object> claims = new HashMap<>();
+            Map<String, Object> headers = new HashMap<>();
+            claims.put("email", user.getUsername());
+            headers.put("typ", "JWT");
+            return doGenerateToken(claims, headers);
+        } catch (Exception e){
+            return null;
+        }
     }
 
     private String doGenerateToken(Map<String, Object> claims, Map<String, Object> headers) {
