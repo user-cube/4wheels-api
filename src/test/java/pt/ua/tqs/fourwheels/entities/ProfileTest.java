@@ -32,7 +32,7 @@ class ProfileTest {
 
     @Test
     public void getType() {
-        assertEquals(get.getType(), "Vendedor");
+        assertEquals(get.getType(), 1);
     }
 
     @Test
@@ -103,7 +103,7 @@ class ProfileTest {
     @Test
     public void setZipCode() {
         set.setZipCode("678798");
-        assertEquals(set.getZipCode(), 678798);
+        assertEquals(set.getZipCode(), "678798");
     }
 
     @Test
