@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
@@ -17,7 +18,9 @@ import pt.ua.tqs.fourwheels.repositories.CarRepository;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 import springfox.documentation.spring.web.json.Json;
 
+import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,13 +144,10 @@ public class UsersController {
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
         if (user.getType() == 2) {
-            Page<Profile> userPage =  profileRepository.findByOwnerCarsRegistered(pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> buyersPage = userPage.getContent();
+            List<Object> userPage =  profileRepository.findByOwnerCarsRegistered();
 
             JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+            json.put("data", userPage);
 
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
