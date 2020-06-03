@@ -7,9 +7,11 @@ import java.util.List;
 
 
 public interface CarRepository extends CrudRepository<Car, Integer> {
-    List<Car> findCarsByBrandContaining(String brand);
-    List<Car> findCarsByModelContaining(String model);
-    List<Car> findCarsByYearEquals(int year);
-    List<Car> findCarsByTypeOfFuelEquals(String fuelType);
+    List<Car> findCarsByBrandContainingAndCarStateEquals(String brand, String state);
+    List<Car> findCarsByModelContainingAndCarStateEquals(String model, String state);
+    List<Car> findCarsByYearEqualsAndCarStateEquals(int year, String state);
+    List<Car> findCarsByTypeOfFuelEqualsAndCarStateEquals(String fuelType, String state);
     Car findCarsById(int id);
+    List<Car> findCarsByOwnerMail(String email);
+    List<Car> findCarsByCarStateEquals(String state);
 }

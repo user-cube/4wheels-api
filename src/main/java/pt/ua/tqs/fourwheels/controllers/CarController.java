@@ -51,8 +51,8 @@ public class CarController {
     }
     )
     @GetMapping(value = "/")
-    public Iterable<Car> getAllCars(){
-        return carRepository.findAll();
+    public List<Car> getAllCars(){
+        return carRepository.findCarsByCarStateEquals("selling");
     }
 
     @ApiOperation(value = "Insert a car on the database.", response = Iterable.class)
@@ -69,6 +69,7 @@ public class CarController {
         myList.add(carRepository.save(car.getCar()));
         return myList;
     }
+
 
     @ApiOperation(value = "Remove a car from the database.", response = Iterable.class)
     @ApiResponses(value = {
@@ -93,7 +94,7 @@ public class CarController {
     )
     @GetMapping(value = "/brand/{content}")
     public List<Car>  searchByBrand(@PathVariable("content") String content){
-        return carRepository.findCarsByBrandContaining(content);
+        return carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by model.", response = Iterable.class)
@@ -106,7 +107,7 @@ public class CarController {
     )
     @GetMapping(value = "/model/{content}")
     public List<Car> searchByModel(@PathVariable("content") String content){
-        return carRepository.findCarsByModelContaining(content);
+        return carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by year.", response = Iterable.class)
@@ -119,7 +120,7 @@ public class CarController {
     )
     @GetMapping(value = "/year/{content}")
     public List<Car> searchByYear(@PathVariable("content") int content){
-        return carRepository.findCarsByYearEquals(content);
+        return carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling");
     }
 
     @ApiOperation(value = "Search a car by fuel.", response = Iterable.class)
@@ -132,13 +133,8 @@ public class CarController {
     )
     @GetMapping(value = "/fuel/{content}")
     public List<Car> searchByFuelType(@PathVariable("content") String content){
-        return carRepository.findCarsByTypeOfFuelEquals(content);
+        return carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling");
     }
-
-
-
-
-
 
 
 
@@ -181,6 +177,56 @@ public class CarController {
         }else {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
+    }
+
+
+    /**
+     * Mark a car as sold.
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "Mark car as sold.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully marked car as sold."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @PutMapping(value = "sold/{id}")
+    public ResponseEntity<Car> markCarAsSold(@PathVariable("id") int id, HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+
+        Car updateCar = carRepository.findCarsById(id);
+
+        if(updateCar.getOwnerMail().equals(email)){
+            updateCar.setCarState("sold");
+            return ResponseEntity.ok(carRepository.save(updateCar));
+        }else {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
+    }
+
+
+    /**
+     * List all the cars a owner as to sell.
+     * @return
+     */
+    @ApiOperation(value = "List all the cars of a certain vendor.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved the list of cars for the owner."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendor")
+    public List<Car> getAllCarsFromVendor(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+
+        return carRepository.findCarsByOwnerMail(email);
     }
 
 
