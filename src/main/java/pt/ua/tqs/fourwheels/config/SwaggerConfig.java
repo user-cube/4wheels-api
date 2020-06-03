@@ -23,7 +23,7 @@ public class SwaggerConfig {
     private ApiInfo metaData() {
         return new ApiInfo("4wheels",
                 "A multi-layer web application, in Spring Boot, supplied with automated tests.", "1.0",
-                "Terms of service", new Contact("Rui Coelho", "https://ruicoelho.pt/", "ruicoelho@ua.pt"),
+                "Terms of service", new Contact("Rui Coelho, João Laranjo, Pedro Iglésias.", null, null),
                 "Apache License Version 2.0", "https://www.apache.org/licenses/LICENSE-2.0");
     }
 }
