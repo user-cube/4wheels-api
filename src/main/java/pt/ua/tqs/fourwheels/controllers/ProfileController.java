@@ -92,6 +92,14 @@ public class ProfileController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
     }
 
+    /**
+     * Delete a user with a
+     * given token.
+     * @param request heders
+     * @return HTTP STATUS 200 if the
+     * delete was successfully otherwise
+     * HTTP 403.
+     */
     @ApiOperation(value = "Delete a profile from the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully delete profile."),
@@ -101,10 +109,19 @@ public class ProfileController {
     }
     )
     @DeleteMapping(value = "/")
-    public void deleteProfile(HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+    public ResponseEntity<JSONObject> deleteProfile(HttpServletRequest request){
+        String email="";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1]; // Get token from header
+            email = validator.tokenValidator(token);
+        } catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
+        json.put("msg", "Successfully deleted");
         profileRepository.deleteByMail(email);
+        return ResponseEntity.ok(json);
     }
 
     /**
