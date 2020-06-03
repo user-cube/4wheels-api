@@ -20,6 +20,10 @@ public class Userm {
     @JsonIgnore
     private String password;
 
+    public Userm(String username, String password) {
+    }
+    public Userm() {
+    }
     public long getId() {
         return id;
     }

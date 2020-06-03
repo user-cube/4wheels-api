@@ -8,4 +8,5 @@ import pt.ua.tqs.fourwheels.entities.Userm;
 public interface Authentication extends CrudRepository<Userm, Integer> {
 
     Userm findByUsername(String username);
+    int countByMailEquals(String email);
 }

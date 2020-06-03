@@ -3,6 +3,8 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Favourite;
@@ -31,10 +33,13 @@ public class FavouriteController {
     }
     )
     @GetMapping(value = "/")
-    public List<Favourite> getFavourites(HttpServletRequest request){
+    public ResponseEntity<List<Favourite>> getFavourites(HttpServletRequest request){
         String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        return favouriteRepository.findAllByMail(email);
+        if (jwtTokenUtil.validateToken(token)) {
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            return ResponseEntity.ok(favouriteRepository.findAllByMail(email));
+        }
+        return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
     
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)

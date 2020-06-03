@@ -26,7 +26,11 @@ public class JwtTokenUtil implements Serializable {
     private String expirationTime;
 
     public Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+        } catch (Exception e){
+            return null;
+        }
     }
 
 //    public Map<String, Object> getCredentialsFromToken(String token) {
@@ -38,17 +42,29 @@ public class JwtTokenUtil implements Serializable {
 //        return credentials;
 //    }
     public String getUsernameFromToken(String token) {
-        Claims ca = getAllClaimsFromToken(token);
-        return ca.get("email").toString();
+        try {
+            Claims ca = getAllClaimsFromToken(token);
+            return ca.get("email").toString();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     public Date getExpirationDateFromToken(String token) {
-        return getAllClaimsFromToken(token).getExpiration();
+        try {
+            return getAllClaimsFromToken(token).getExpiration();
+        } catch (Exception e){
+            return null;
+        }
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        try {
+            final Date expiration = getExpirationDateFromToken(token);
+            return expiration.before(new Date());
+        } catch (Exception e){
+            return true;
+        }
     }
 
     public String generateToken(UserDetails user) {

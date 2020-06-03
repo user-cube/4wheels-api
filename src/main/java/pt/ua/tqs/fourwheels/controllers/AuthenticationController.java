@@ -21,10 +21,6 @@ import org.apache.logging.log4j.LogManager;
 
 @RestController
 public class AuthenticationController {
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -35,9 +31,6 @@ public class AuthenticationController {
 
     @PostMapping(value = "/authenticate")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest){
-
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
         final UserDetails userDetails = userDetailsService
                .loadUserByUsername(authenticationRequest.getUsername());
 
@@ -49,14 +42,6 @@ public class AuthenticationController {
     @PostMapping(value = "/register")
     public ResponseEntity<Userm> saveUser(@RequestBody UserModel user){
         return ResponseEntity.ok(userDetailsService.save(user));
-    }
-
-    private void authenticate(String username, String password){
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        } catch (DisabledException|BadCredentialsException e) {
-            logger.info(e.toString());
-        }
     }
 }
 

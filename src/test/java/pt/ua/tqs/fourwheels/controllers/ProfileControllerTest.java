@@ -14,11 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import pt.ua.tqs.fourwheels.authentication.JwtAuthenticationEntryPoint;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
+import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-import pt.ua.tqs.fourwheels.services.JwtUserDetailsService;
+import pt.ua.tqs.fourwheels.tools.Validator;
 
 import static org.hamcrest.Matchers.hasKey;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
@@ -38,33 +38,57 @@ class ProfileControllerTest {
     private ProfileRepository profileRepository;
     @MockBean
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
-
+    @MockBean
+    private Authentication authentication;
+    @MockBean
+    private Validator validator;
+    String accessToken = System.getenv("TEST_TOKEN");
+    String email = System.getenv("TESTER_EMAIL");
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository, jwtTokenUtil))
+        mockMvc = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository, jwtTokenUtil, authentication, validator))
                 .alwaysExpect(forwardedUrl(null))
                 .build();
+        validator = new Validator(jwtTokenUtil, authentication);
     }
 
     @Test
-    public void getInform() throws Exception {
-        Profile profile = new Profile(1, "sdfs", "ruicoelho@ua.pt", 910000000, "ewefwe", "3810", "aveiro", 211111111, null);
+    public void getInfoWithTokenOk() throws Exception {
+        // Mocks
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, null);
         Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
-        mockMvc.perform(get("/profile/" + 1)).andDo(print())
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(authentication.countByMailEquals(email)).thenReturn(1);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(validator.tokenValidator(accessToken)).thenReturn(email);
+
+
+        mockMvc.perform(get("/profile/").header("Authorization", "Bearer " + accessToken)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasKey("id")))
                 .andExpect(jsonPath("$", hasKey("name")))
                 .andExpect(jsonPath("$", hasKey("mail")));
 
-        MvcResult mock = mockMvc.perform(get("/profile/" + 1))
+        MvcResult mock = mockMvc.perform(get("/profile/").header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andReturn();
 
         assertEquals("application/json",
                 mock.getResponse().getContentType());
 
+    }
+
+    @Test
+    public void getInfoWithoutToken() throws Exception{
+        mockMvc.perform(get("/profile/")).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/profile/"))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
     }
 }

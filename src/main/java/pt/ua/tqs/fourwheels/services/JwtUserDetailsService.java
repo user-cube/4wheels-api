@@ -18,11 +18,15 @@ import org.apache.logging.log4j.LogManager;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 
-    @Autowired
+
     private Authentication authentication;
 
-    @Autowired
     private PasswordEncoder bcryptEncoder;
+
+    public JwtUserDetailsService(Authentication authentication, PasswordEncoder bcryptEncoder) {
+        this.authentication = authentication;
+        this.bcryptEncoder = bcryptEncoder;
+    }
 
     private Logger logger = LogManager.getLogger(JwtUserDetailsService.class.getName());
     private static final Marker USER_MARKER = MarkerManager.getMarker("USER");
