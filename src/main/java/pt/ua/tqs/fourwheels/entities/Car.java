@@ -34,6 +34,16 @@ public class Car {
     private String typeOfFuel;
     private String ownerMail;
     private float price;
+    private String carState;
+
+
+    public String getCarState() {
+        return carState;
+    }
+
+    public void setCarState(String carState) {
+        this.carState = carState;
+    }
 
     public Integer getId() {
         return id;
