@@ -15,4 +15,5 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Integer> 
     Page<Car> findCarsByOwnerMail(String email, Pageable pageable);
     Page<Car> findCarsByCarStateEquals(String state, Pageable pageable);
     Page<Car> findCarsByOwnerMailEqualsAndAndCarStateEquals(String email, String sate, Pageable pageable);
+
 }
