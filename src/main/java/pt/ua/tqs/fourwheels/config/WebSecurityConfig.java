@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/v2/api-docs",
                 "/car/**",
                 "/analytics/**",
-                "favourite/**")
+                "/favourite/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
