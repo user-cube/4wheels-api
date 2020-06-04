@@ -13,12 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-import springfox.documentation.spring.web.json.Json;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/users")
@@ -121,6 +118,84 @@ public class UsersController {
         }
     }
 
+
+    @ApiOperation(value = "List the amount of cars vendors have registered on the platform.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved amount of cars registered by vendor."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendors/cars/registered")
+    public ResponseEntity<JSONObject> getNumberOfCarsRegisteredByVendor(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        Profile user = profileRepository.findByMail(email);
+
+        if (user.getType() == 2) {
+            List<Object> amountOfCarsRegisteredByUser =  profileRepository.findByOwnerCarsRegistered();
+
+            JSONObject json = new JSONObject();
+            json.put("data", amountOfCarsRegisteredByUser);
+
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
+    @ApiOperation(value = "List the amount of cars vendors have sold on the platform.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved amount of cars sold by vendor."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendors/cars/sold")
+    public ResponseEntity<JSONObject> getNumberOfCarsSoldByVendor(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        Profile user = profileRepository.findByMail(email);
+
+        if (user.getType() == 2) {
+            List<Object> amountOfCarsSoldByUser =  profileRepository.findByOwnerCarsSold();
+
+            JSONObject json = new JSONObject();
+            json.put("data", amountOfCarsSoldByUser);
+
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
+    @ApiOperation(value = "List the amount of cars vendors have for sale on the platform.", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully retrieved amount of cars on sale by vendor."),
+            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+    }
+    )
+    @GetMapping(value = "/vendors/cars/selling")
+    public ResponseEntity<JSONObject> getNumberOfCarsOnSaleByVendor(HttpServletRequest request){
+        String token = request.getHeader("Authorization").split(" ")[1];
+        String email = jwtTokenUtil.getUsernameFromToken(token);
+        Profile user = profileRepository.findByMail(email);
+
+        if (user.getType() == 2) {
+            List<Object> amountOfCarsOnSaleByUser =  profileRepository.findByOwnerCarsSelling();
+
+            JSONObject json = new JSONObject();
+            json.put("data", amountOfCarsOnSaleByUser);
+
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
 
 
 }
