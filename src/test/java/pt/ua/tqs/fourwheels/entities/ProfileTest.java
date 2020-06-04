@@ -24,56 +24,93 @@ class ProfileTest {
         get.setAddress("Rua perfeita");
         get.setName("EUSOU Lesias");
         get.setNif(9412);
+        get.setPhoto("lindo");
     }
+
+    @Test
+    public void constProfilePartial() {
+        Profile p = new Profile(1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
+        assertEquals(1, p.getType());
+        assertEquals("name", p.getName());
+        assertEquals("mail",p.getMail());
+        assertEquals(1,p.getContact());
+        assertEquals("address", p.getAddress());
+        assertEquals("zipCode", p.getZipCode());
+        assertEquals("city", p.getCity());
+        assertEquals(1, p.getNif());
+        assertEquals("photo", p.getPhoto());
+
+    }
+
+    @Test
+    public void constProfileFull(){
+        Profile p = new Profile(1, 1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
+        assertEquals(1, p.getId());
+        assertEquals(1, p.getType());
+        assertEquals("name", p.getName());
+        assertEquals("mail", p.getMail());
+        assertEquals(1, p.getContact());
+        assertEquals("address", p.getAddress());
+        assertEquals("zipCode", p.getZipCode());
+        assertEquals("city", p.getCity());
+        assertEquals(1, p.getNif());
+        assertEquals("photo", p.getPhoto());
+    }
+
     @Test
     public void getId() {
-        assertEquals(get.getId() >= 0,true);
+        assertEquals(true, get.getId() >= 0);
     }
 
     @Test
     public void getType() {
-        assertEquals(get.getType(), 1);
+        assertEquals(1, get.getType());
     }
 
     @Test
     public void getName() {
-        assertEquals(get.getName(), "EUSOU Lesias");
+        assertEquals("EUSOU Lesias", get.getName());
     }
 
     @Test
     public void getMail() {
-        assertEquals(get.getMail(), "lmao@mail.com");
+        assertEquals("lmao@mail.com", get.getMail());
     }
 
     @Test
     public void getContact() {
-        assertEquals(get.getContact(), 999999999);
+        assertEquals(999999999, get.getContact());
     }
 
     @Test
     public void getAdress() {
-        assertEquals(get.getAddress(), "Rua perfeita");
+        assertEquals("Rua perfeita", get.getAddress());
     }
 
     @Test
     public void getZipCode() {
-        assertEquals(get.getZipCode(), "555");
+        assertEquals("555", get.getZipCode());
     }
 
     @Test
     public void getCity() {
-        assertEquals(get.getCity(), "Porto");
+        assertEquals("Porto", get.getCity());
     }
 
     @Test
     public void getNif() {
-        assertEquals(get.getNif(), 9412);
+        assertEquals(9412, get.getNif());
+    }
+
+    @Test
+    public void setPhoto() {
+        assertEquals("lindo", get.getPhoto());
     }
 
     @Test
     public void setType() {
         set.setType(1);
-        assertEquals(set.getType(), 1);
+        assertEquals(1, set.getType());
     }
 
     @Test

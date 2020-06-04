@@ -8,30 +8,42 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
-import pt.ua.tqs.fourwheels.repositories.Authentication;
+import pt.ua.tqs.fourwheels.models.ProfileModel;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.http.HttpStatus;
+
+
 
 @RestController
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private Authentication authentication;
     private JSONObject json = new JSONObject();
     private JwtTokenUtil jwtTokenUtil;
     private ProfileRepository profileRepository;
     private Logger logger = LogManager.getLogger(ProfileController.class);
 
+    private String auth = "Authorization";
+    private String type = "type";
+    private String name = "name";
+    private String mail = "mail";
+    private String contact = "contact";
+    private String address = "address";
+    private String zipCode = "zipCode";
+    private String city = "city";
+    private String nif = "nif";
+    private String photo = "photo";
+    private String error = "error";
 
-    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil, Authentication authentication){
+    private String bdCred = "Bad Credentials!";
+
+    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.authentication = authentication;
     }
 
     /**
@@ -52,19 +64,39 @@ public class ProfileController {
     }
     )
     @GetMapping(value = "/")
-    public ResponseEntity getInfo(HttpServletRequest request){
-        json.put("error", "Bad credentials");
+    public ResponseEntity<JSONObject> getInfo(HttpServletRequest request){
         try {
-            String token = request.getHeader("Authorization").split(" ")[1]; // Get token from header
+            String token = request.getHeader(auth).split(" ")[1]; // Get token from header
             String email = jwtTokenUtil.getUsernameFromToken(token);
-            return ResponseEntity.ok(profileRepository.findByMail(email));
+
+            Profile p = profileRepository.findByMail(email);
+            json.put("id", p.getId());
+            json.put(type, p.getType());
+            json.put(name, p.getName());
+            json.put(mail, email);
+            json.put(contact, p.getContact());
+            json.put(address, p.getAddress());
+            json.put(zipCode, p.getZipCode());
+            json.put(city, p.getCity());
+            json.put(nif, p.getNif());
+            json.put(photo, p.getPhoto());
+
+            return ResponseEntity.status(HttpStatus.OK).body(json);
         } catch (Exception e){
             logger.error(e.toString());
+            json.put(error, bdCred);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
 
-
+    /**
+     * Store a profile with
+     * a given post.
+     * @param newProfile profile to add.
+     * @param request authorization header.
+     * @return HTTP STATUS Code 200
+     * otherwise return HTTP STATUS 403.
+     */
     @ApiOperation(value = "Insert a profile on the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully inserted user profile information."),
@@ -74,8 +106,31 @@ public class ProfileController {
     }
     )
     @PostMapping(value = "/")
-    public Profile insertProfile(@RequestBody Profile user){
-        return profileRepository.save(user);
+    public ResponseEntity<JSONObject> insertProfile(@RequestBody ProfileModel newProfile, HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
+
+        profileRepository.save(newProfile.getProfile());
+
+        json.put("id", newProfile.getProfile().getId());
+        json.put(type, newProfile.getProfile().getType());
+        json.put(name, newProfile.getProfile().getName());
+        json.put(mail, email);
+        json.put(contact, newProfile.getProfile().getContact());
+        json.put(address, newProfile.getProfile().getAddress());
+        json.put(zipCode, newProfile.getProfile().getZipCode());
+        json.put(city, newProfile.getProfile().getCity());
+        json.put(nif, newProfile.getProfile().getNif());
+        json.put(photo, newProfile.getProfile().getPhoto());
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @ApiOperation(value = "Delete a profile from the database.", response = Iterable.class)
@@ -87,17 +142,22 @@ public class ProfileController {
     }
     )
     @DeleteMapping(value = "/")
-    public void deleteProfile(HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+    public ResponseEntity<JSONObject> deleteProfile(HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
         profileRepository.deleteByMail(email);
+        json.put("msg", "Successfully Deleted!");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
-    /**
-     * Edit Specific profile
-     * @param id
-     * @return
-     */
+
     @ApiOperation(value = "Edit profile details for a specific user.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully edited profile information."),
@@ -107,18 +167,39 @@ public class ProfileController {
     }
     )
     @PutMapping(value = "/")
-    public ResponseEntity<Profile> editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile optionalProf = profileRepository.findByMail(email);
-        optionalProf.setPhoto(newProfile.getPhoto());
-        optionalProf.setName(newProfile.getName());
-        optionalProf.setContact(newProfile.getContact());
-        optionalProf.setAddress(newProfile.getAddress());
-        optionalProf.setZipCode(newProfile.getZipCode());
-        optionalProf.setCity(newProfile.getCity());
-        optionalProf.setNif(newProfile.getNif());
-        return ResponseEntity.ok(profileRepository.save(optionalProf));
-    }
+    public ResponseEntity<JSONObject> editProfileInfo(@RequestBody ProfileModel newProfile, HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
 
+            Profile optionalProf = profileRepository.findByMail(email);
+            optionalProf.setPhoto(newProfile.getProfile().getPhoto());
+            optionalProf.setName(newProfile.getProfile().getName());
+            optionalProf.setContact(newProfile.getProfile().getContact());
+            optionalProf.setAddress(newProfile.getProfile().getAddress());
+            optionalProf.setZipCode(newProfile.getProfile().getZipCode());
+            optionalProf.setCity(newProfile.getProfile().getCity());
+            optionalProf.setNif(newProfile.getProfile().getNif());
+
+            profileRepository.save(optionalProf);
+
+            json.put("id", optionalProf.getId());
+            json.put(type, optionalProf.getType());
+            json.put(name, optionalProf.getName());
+            json.put(mail, email);
+            json.put(contact, optionalProf.getContact());
+            json.put(address, optionalProf.getAddress());
+            json.put(zipCode, optionalProf.getZipCode());
+            json.put(city, optionalProf.getCity());
+            json.put(nif, optionalProf.getNif());
+            json.put(photo, optionalProf.getPhoto());
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
+    }
 }
