@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
+import pt.ua.tqs.fourwheels.models.ProfileModel;
 import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
@@ -88,7 +89,7 @@ public class ProfileController {
     )
     @PostMapping(value = "/")
     // public Profile insertProfile(@RequestBody Profile user){
-    public ResponseEntity insertProfile(@RequestBody Profile newProfile, HttpServletRequest request){
+    public ResponseEntity<JSONObject> insertProfile(@RequestBody ProfileModel newProfile, HttpServletRequest request){
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
@@ -96,23 +97,28 @@ public class ProfileController {
             email = jwtTokenUtil.getUsernameFromToken(token);
         }catch (Exception e){
             logger.error(e.toString());
+            json.put("error", "Bad credentials");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
 
-        Profile profile = new Profile(
-                newProfile.getId(),
-                newProfile.getType(),
-                newProfile.getName(),
-                newProfile.getMail(),
-                newProfile.getContact(),
-                newProfile.getAddress(),
-                newProfile.getZipCode(),
-                newProfile.getCity(),
-                newProfile.getNif(),
-                newProfile.getPhoto());
+        profileRepository.save(newProfile.getProfile());
 
+        json.put("id", newProfile.getProfile().getId());
+        json.put("type", newProfile.getProfile().getType());
+        json.put("name", newProfile.getProfile().getName());
+        json.put("mail", email);
+        // json.put("mail", optionalProf.getMail());
+        json.put("contact", newProfile.getProfile().getContact());
+        json.put("address", newProfile.getProfile().getAddress());
+        json.put("zipCode", newProfile.getProfile().getZipCode());
+        json.put("city", newProfile.getProfile().getCity());
+        json.put("nif", newProfile.getProfile().getNif());
+        json.put("photo", newProfile.getProfile().getPhoto());
+
+        return ResponseEntity.status(HttpStatus.OK).body(json);
         //return ResponseEntity.ok(profileRepository.save(profile));
-        return ResponseEntity.status(HttpStatus.OK).body(profileRepository.save(profile));
+        //return ResponseEntity.status(HttpStatus.OK).body(profileRepository.save(profile));
+        //return ResponseEntity.status(HttpStatus.OK).body(profileRepository.save(newProfile.getProfile()));
     }
 
     @ApiOperation(value = "Delete a profile from the database.", response = Iterable.class)
@@ -124,16 +130,20 @@ public class ProfileController {
     }
     )
     @DeleteMapping(value = "/")
-    public ResponseEntity deleteProfile(HttpServletRequest request){
+    public ResponseEntity<JSONObject> deleteProfile(HttpServletRequest request){
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
         }catch (Exception e){
             logger.error(e.toString());
+            json.put("error", "Bad credentials");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
-        return ResponseEntity.ok(profileRepository.deleteByMail(email));
+        profileRepository.deleteByMail(email);
+        json.put("msg", "Successfully Deleted!");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
+        //return ResponseEntity.ok(profileRepository.deleteByMail(email));
     }
 
 

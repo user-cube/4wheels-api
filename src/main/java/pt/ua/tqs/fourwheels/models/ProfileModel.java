@@ -16,10 +16,6 @@ public class ProfileModel {
 
     private Profile profile;
 
-    public ProfileModel(Profile profile) {
-        this.profile = profile;
-    }
-
     public Profile getProfile() {
         return profile;
     }
