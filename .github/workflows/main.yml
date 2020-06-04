@@ -21,7 +21,6 @@ jobs:
           MYSQL_ENDPOINT: ${{ secrets.MYSQL_ENDPOINT }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           TEST_TOKEN: ${{secrets.TEST_TOKEN }}
-          TESTER_EMAIL: ${{secrets.TESTER_EMAIL}}
           SPRING_PORT: ${{ secrets.SPRING_PORT }}
           SONAR: ${{ secrets.SONAR }}
           JWT_SECRET: ${{ secrets.JWT }}
