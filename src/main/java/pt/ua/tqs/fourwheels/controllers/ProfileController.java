@@ -74,8 +74,32 @@ public class ProfileController {
     }
     )
     @PostMapping(value = "/")
-    public Profile insertProfile(@RequestBody Profile user){
-        return profileRepository.save(user);
+    // public Profile insertProfile(@RequestBody Profile user){
+    public ResponseEntity insertProfile(@RequestBody Profile newProfile, HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            System.out.println(token);
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
+
+        Profile profile = new Profile(
+                newProfile.getId(),
+                newProfile.getType(),
+                newProfile.getName(),
+                newProfile.getMail(),
+                newProfile.getContact(),
+                newProfile.getAddress(),
+                newProfile.getZipCode(),
+                newProfile.getCity(),
+                newProfile.getNif(),
+                newProfile.getPhoto());
+
+        //return ResponseEntity.ok(profileRepository.save(profile));
+        return ResponseEntity.status(HttpStatus.OK).body(profileRepository.save(profile));
     }
 
     @ApiOperation(value = "Delete a profile from the database.", response = Iterable.class)
@@ -87,10 +111,16 @@ public class ProfileController {
     }
     )
     @DeleteMapping(value = "/")
-    public void deleteProfile(HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        profileRepository.deleteByMail(email);
+    public ResponseEntity deleteProfile(HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+            logger.error(e.toString());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
+        return ResponseEntity.ok(profileRepository.deleteByMail(email));
     }
 
     /**
@@ -108,24 +138,40 @@ public class ProfileController {
     )
     @PutMapping(value = "/")
     public ResponseEntity editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
-
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
-            System.out.println(token);
             email = jwtTokenUtil.getUsernameFromToken(token);
+
+            Profile optionalProf = profileRepository.findByMail(email);
+            optionalProf.setPhoto(newProfile.getPhoto());
+            optionalProf.setName(newProfile.getName());
+            optionalProf.setContact(newProfile.getContact());
+            optionalProf.setAddress(newProfile.getAddress());
+            optionalProf.setZipCode(newProfile.getZipCode());
+            optionalProf.setCity(newProfile.getCity());
+            optionalProf.setNif(newProfile.getNif());
+
+            profileRepository.save(optionalProf);
+
+            json.put("id", optionalProf.getId());
+            json.put("type", optionalProf.getType());
+            json.put("name", optionalProf.getName());
+            json.put("mail", email);
+            // json.put("mail", optionalProf.getMail());
+            json.put("contact", optionalProf.getContact());
+            json.put("address", optionalProf.getAddress());
+            json.put("zipCode", optionalProf.getZipCode());
+            json.put("city", optionalProf.getCity());
+            json.put("nif", optionalProf.getNif());
+            json.put("photo", optionalProf.getPhoto());
+            //return ResponseEntity.ok(profileRepository.save(optionalProf));
+            //return ResponseEntity.status(HttpStatus.OK).body(profileRepository.save(optionalProf).toString());
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+
         }catch (Exception e){
                 logger.error(e.toString());
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
-        Profile optionalProf = profileRepository.findByMail(email);
-        optionalProf.setPhoto(newProfile.getPhoto());
-        optionalProf.setName(newProfile.getName());
-        optionalProf.setContact(newProfile.getContact());
-        optionalProf.setAddress(newProfile.getAddress());
-        optionalProf.setZipCode(newProfile.getZipCode());
-        optionalProf.setCity(newProfile.getCity());
-        optionalProf.setNif(newProfile.getNif());
-        return ResponseEntity.ok(profileRepository.save(optionalProf));
     }
 }

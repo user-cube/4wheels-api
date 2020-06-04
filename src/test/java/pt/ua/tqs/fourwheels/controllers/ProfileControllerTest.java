@@ -90,6 +90,47 @@ class ProfileControllerTest {
                 mock.getResponse().getContentType());
     }
 
+    @Test
+    public void putInfoWithTokenOk() throws Exception {
+
+        // Mocks
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json = new JSONObject();
+        json.put("id", profile.getId());
+        json.put("type", profile.getType());
+        json.put("name", profile.getName());
+        json.put("mail", profile.getMail());
+        json.put("contact", profile.getContact());
+        json.put("address", profile.getAddress());
+        json.put("zipCode", profile.getZipCode());
+        json.put("city", profile.getCity());
+        json.put("nif", profile.getNif());
+        json.put("photo", profile.getPhoto());
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+
+        mockMvc.perform(put("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(200)));
+
+        MvcResult mock = mockMvc.perform(put("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(200)))
+                .andReturn();
+
+        assertEquals("application/json", mock.getResponse().getContentType());
+
+    }
+
 
     @Test
     public void putInfoWithoutToken() throws Exception{
@@ -122,5 +163,57 @@ class ProfileControllerTest {
                 .andReturn();
 
         assertEquals("application/json", mock.getResponse().getContentType());
+    }
+
+
+    @Test
+    public void deleteInfoWithoutToken() throws Exception{
+
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json = new JSONObject();
+        json.put("id", profile.getId());
+        json.put("type", profile.getType());
+        json.put("name", profile.getName());
+        json.put("mail", profile.getMail());
+        json.put("contact", profile.getContact());
+        json.put("address", profile.getAddress());
+        json.put("zipCode", profile.getZipCode());
+        json.put("city", profile.getCity());
+        json.put("nif", profile.getNif());
+        json.put("photo", profile.getPhoto());
+
+
+        mockMvc.perform(post("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)));
+
+        MvcResult mock = mockMvc.perform(post("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+
+    @Test
+    public void postInfoWithoutToken() throws Exception{
+        mockMvc.perform(delete("/profile/"))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(delete("/profile/"))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
     }
 }

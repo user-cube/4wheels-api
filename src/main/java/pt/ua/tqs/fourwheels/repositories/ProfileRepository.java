@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 public interface ProfileRepository extends PagingAndSortingRepository<Profile, Integer> {
     Profile findByMail(String email);
     @Transactional
-    void deleteByMail(String email);
+    Profile deleteByMail(String email);
 
     Page<Profile> findAllByTypeEquals(int type, Pageable pageable);
 }
