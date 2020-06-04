@@ -8,7 +8,7 @@ import static org.junit.Assert.assertNotEquals;
 @WebMvcTest(value = CarRepositoryTest.class)
 class CarRepositoryTest {
     @Test
-    private void injectedComponentAreNotNullTest() {
+    public void injectedComponentAreNotNullTest() {
         assertNotEquals(0, 1);
     }
 }

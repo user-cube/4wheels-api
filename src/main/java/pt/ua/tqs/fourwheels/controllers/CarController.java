@@ -63,7 +63,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        JSONObject json = new JSONObject();
+        json.clear();
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -156,7 +156,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        JSONObject json = new JSONObject();
+        json.clear();
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -177,7 +177,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        JSONObject json = new JSONObject();
+        json.clear();
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -198,7 +198,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        JSONObject json = new JSONObject();
+        json.clear();
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -219,7 +219,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        JSONObject json = new JSONObject();
+        json.clear();;
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -241,7 +241,7 @@ public class CarController {
     }
     )
     @PutMapping(value = "/{id}")
-    public ResponseEntity<JSONObject> editCarInfo(@RequestBody Car newCar, @PathVariable("id") int id, HttpServletRequest request){
+    public ResponseEntity<JSONObject> editCarInfo(@RequestBody CarModel newCar, @PathVariable("id") int id, HttpServletRequest request){
 
         String email = "";
         try {
@@ -253,19 +253,17 @@ public class CarController {
             }
 
             Car optionalCar = carRepository.findCarsById(id);
-            System.out.println(optionalCar.getOwnerMail());
-            System.out.println(email);
             if(optionalCar.getOwnerMail().equals(email)) {
-                optionalCar.setPhoto(newCar.getPhoto());
-                optionalCar.setBrand(newCar.getBrand());
-                optionalCar.setModel(newCar.getModel());
-                optionalCar.setYear(newCar.getYear());
-                optionalCar.setMonth(newCar.getMonth());
-                optionalCar.setDescription(newCar.getDescription());
-                optionalCar.setKilometers(newCar.getKilometers());
-                optionalCar.setTypeOfFuel(newCar.getTypeOfFuel());
-                optionalCar.setOwnerMail(newCar.getOwnerMail());
-                optionalCar.setPrice(newCar.getPrice());
+                optionalCar.setPhoto(newCar.getCar().getPhoto());
+                optionalCar.setBrand(newCar.getCar().getBrand());
+                optionalCar.setModel(newCar.getCar().getModel());
+                optionalCar.setYear(newCar.getCar().getYear());
+                optionalCar.setMonth(newCar.getCar().getMonth());
+                optionalCar.setDescription(newCar.getCar().getDescription());
+                optionalCar.setKilometers(newCar.getCar().getKilometers());
+                optionalCar.setTypeOfFuel(newCar.getCar().getTypeOfFuel());
+                optionalCar.setOwnerMail(newCar.getCar().getOwnerMail());
+                optionalCar.setPrice(newCar.getCar().getPrice());
             }
 
             json.put("id", optionalCar.getId());
@@ -374,7 +372,7 @@ public class CarController {
             int totalPages = carPage.getTotalPages();
             List<Car> cars = carPage.getContent();
 
-            JSONObject json = new JSONObject();
+            json.clear();
             json.put("data", cars);
             json.put("totalpages", totalPages);
             return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -415,7 +413,7 @@ public class CarController {
             int totalPages = carPage.getTotalPages();
             List<Car> cars = carPage.getContent();
 
-            JSONObject json = new JSONObject();
+            json.clear();
             json.put("data", cars);
             json.put("totalpages", totalPages);
             return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -456,7 +454,7 @@ public class CarController {
             int totalPages = carPage.getTotalPages();
             List<Car> cars = carPage.getContent();
 
-            JSONObject json = new JSONObject();
+            json.clear();
             json.put("data", cars);
             json.put("totalpages", totalPages);
             return ResponseEntity.status(HttpStatus.OK).body(json);

@@ -427,7 +427,6 @@ class CarControllerTest {
     @Test
     void editCarInfoWithToken()  throws Exception {
         Car optionalCar = car;
-        json = (JSONObject) json.get("car");
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
