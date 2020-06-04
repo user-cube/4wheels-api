@@ -39,7 +39,7 @@ public class CarController {
     private String ownerMail = "ownerMail";
     private String price = "price";
     private String carState = "carState";
-
+    private String year = "year";
 
     public CarController(CarRepository carRepository, JwtTokenUtil jwtTokenUtil) {
         this.carRepository = carRepository;
@@ -104,23 +104,23 @@ public class CarController {
             }
             JSONObject pre = new JSONObject();
             pre.put("id",car.getCar().getId());
-            pre.put("photo", car.getCar().getPhoto());
-            pre.put("brand", car.getCar().getBrand());
-            pre.put("model",car.getCar().getModel());
-            pre.put("year", car.getCar().getYear());
-            pre.put("month",car.getCar().getMonth());
-            pre.put("description",car.getCar().getDescription());
-            pre.put("kilometers", car.getCar().getKilometers());
-            pre.put("typeOfFuel", car.getCar().getTypeOfFuel());
-            pre.put("ownerMail", car.getCar().getOwnerMail());
-            pre.put("price", car.getCar().getPrice());
-            pre.put("carState", car.getCar().getCarState());
+            pre.put(photo, car.getCar().getPhoto());
+            pre.put(brand, car.getCar().getBrand());
+            pre.put(model,car.getCar().getModel());
+            pre.put(year, car.getCar().getYear());
+            pre.put(month,car.getCar().getMonth());
+            pre.put(description,car.getCar().getDescription());
+            pre.put(kilometers, car.getCar().getKilometers());
+            pre.put(typeOfFuel, car.getCar().getTypeOfFuel());
+            pre.put(ownerMail, car.getCar().getOwnerMail());
+            pre.put(price, car.getCar().getPrice());
+            pre.put(carState, car.getCar().getCarState());
             json.put("car",pre);
             carRepository.save(car.getCar());
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
             logger.error(e.toString());
-            json.put("error","Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -149,7 +149,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
             logger.error(e.toString());
-            json.put("error","Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -232,7 +232,7 @@ public class CarController {
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
-        json.clear();;
+        json.clear();
         json.put("data", cars);
         json.put("totalpages", totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
@@ -280,17 +280,17 @@ public class CarController {
             }
 
             json.put("id", optionalCar.getId());
-            json.put("photo", optionalCar.getPhoto());
-            json.put("brand", optionalCar.getBrand());
-            json.put("model", optionalCar.getModel());
-            json.put("year", optionalCar.getYear());
-            json.put("month", optionalCar.getMonth());
-            json.put("description", optionalCar.getDescription());
-            json.put("kilometers", optionalCar.getKilometers());
-            json.put("typeOfFuel", optionalCar.getTypeOfFuel());
-            json.put("ownerMail", optionalCar.getOwnerMail());
-            json.put("price", optionalCar.getPrice());
-            json.put("carState", optionalCar.getCarState());
+            json.put(photo, optionalCar.getPhoto());
+            json.put(brand, optionalCar.getBrand());
+            json.put(model, optionalCar.getModel());
+            json.put(year, optionalCar.getYear());
+            json.put(month, optionalCar.getMonth());
+            json.put(description, optionalCar.getDescription());
+            json.put(kilometers, optionalCar.getKilometers());
+            json.put(typeOfFuel, optionalCar.getTypeOfFuel());
+            json.put(ownerMail, optionalCar.getOwnerMail());
+            json.put(price, optionalCar.getPrice());
+            json.put(carState, optionalCar.getCarState());
             carRepository.save(optionalCar);
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
@@ -335,17 +335,17 @@ public class CarController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             json.put("id", updateCar.getId());
-            json.put("photo", updateCar.getPhoto());
-            json.put("brand", updateCar.getBrand());
-            json.put("model", updateCar.getModel());
-            json.put("year", updateCar.getYear());
-            json.put("month", updateCar.getMonth());
-            json.put("description", updateCar.getDescription());
-            json.put("kilometers", updateCar.getKilometers());
-            json.put("typeOfFuel", updateCar.getTypeOfFuel());
-            json.put("ownerMail", updateCar.getOwnerMail());
-            json.put("price", updateCar.getPrice());
-            json.put("carState", updateCar.getCarState());
+            json.put(photo, updateCar.getPhoto());
+            json.put(brand, updateCar.getBrand());
+            json.put(model, updateCar.getModel());
+            json.put(year, updateCar.getYear());
+            json.put(month, updateCar.getMonth());
+            json.put(description, updateCar.getDescription());
+            json.put(kilometers, updateCar.getKilometers());
+            json.put(typeOfFuel, updateCar.getTypeOfFuel());
+            json.put(ownerMail, updateCar.getOwnerMail());
+            json.put(price, updateCar.getPrice());
+            json.put(carState, updateCar.getCarState());
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
