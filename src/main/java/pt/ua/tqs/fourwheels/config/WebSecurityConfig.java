@@ -37,7 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/profile/**",
                 "/users/**",
                 "/v2/api-docs",
-                "/car/**")
+                "/car/**",
+                "/analytics/**",
+                "favourite/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

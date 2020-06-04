@@ -18,12 +18,23 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, I
     void deleteByMail(String email);
     Page<Profile> findAllByTypeEquals(int type, Pageable pageable);
 
-    @Query(value="select profile.name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail group by owner_mail", nativeQuery=true)
+    @Query(value="select profile.name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail group by owner_mail order by counter desc", nativeQuery=true)
     List<Object> findByOwnerCarsRegistered();
 
-    @Query(value="select name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail where car_state='sold' group by owner_mail", nativeQuery=true)
+    @Query(value="select profile.name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail group by owner_mail order by counter desc limit ?1", nativeQuery=true)
+    List<Object> findByOwnerCarsRegisteredLimited(int limit);
+
+    @Query(value="select name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail where car_state='sold' group by owner_mail order by counter desc", nativeQuery=true)
     List<Object> findByOwnerCarsSold();
 
-    @Query(value="select name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail where car_state='selling' group by owner_mail", nativeQuery=true)
+    @Query(value="select name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail where car_state='sold' group by owner_mail order by counter desc limit ?1", nativeQuery=true)
+    List<Object> findByOwnerCarsSoldLimited(int limit);
+
+    @Query(value="select name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail where car_state='selling' group by owner_mail order by counter desc", nativeQuery=true)
     List<Object> findByOwnerCarsSelling();
+
+    @Query(value="select name, count(owner_mail) as counter from profile join car c on profile.mail = c.owner_mail where car_state='selling' group by owner_mail order by counter desc limit ?1", nativeQuery=true)
+    List<Object> findByOwnerCarsSellingLimited(int limit);
+
+    int countAllByTypeEquals(int type);
 }
