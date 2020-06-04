@@ -1,5 +1,6 @@
 package pt.ua.tqs.fourwheels.controllers;
 
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,8 +9,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import org.springframework.test.web.servlet.MvcResult;
@@ -83,5 +88,39 @@ class ProfileControllerTest {
 
         assertEquals("application/json",
                 mock.getResponse().getContentType());
+    }
+
+
+    @Test
+    public void putInfoWithoutToken() throws Exception{
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json = new JSONObject();
+        json.put("id", profile.getId());
+        json.put("type", profile.getType());
+        json.put("name", profile.getName());
+        json.put("mail", profile.getMail());
+        json.put("contact", profile.getContact());
+        json.put("address", profile.getAddress());
+        json.put("zipCode", profile.getZipCode());
+        json.put("city", profile.getCity());
+        json.put("nif", profile.getNif());
+        json.put("photo", profile.getPhoto());
+
+        mockMvc.perform(put("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)));
+
+        MvcResult mock = mockMvc.perform(put("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)))
+                .andReturn();
+
+        assertEquals("application/json", mock.getResponse().getContentType());
     }
 }

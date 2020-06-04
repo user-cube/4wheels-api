@@ -107,9 +107,17 @@ public class ProfileController {
     }
     )
     @PutMapping(value = "/")
-    public ResponseEntity<Profile> editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+    public ResponseEntity editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
+
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            System.out.println(token);
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+                logger.error(e.toString());
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
         Profile optionalProf = profileRepository.findByMail(email);
         optionalProf.setPhoto(newProfile.getPhoto());
         optionalProf.setName(newProfile.getName());
@@ -120,5 +128,4 @@ public class ProfileController {
         optionalProf.setNif(newProfile.getNif());
         return ResponseEntity.ok(profileRepository.save(optionalProf));
     }
-
 }

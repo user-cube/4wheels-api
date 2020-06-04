@@ -24,7 +24,39 @@ class ProfileTest {
         get.setAddress("Rua perfeita");
         get.setName("EUSOU Lesias");
         get.setNif(9412);
+        get.setPhoto("lindo");
     }
+
+    @Test
+    public void constProfile() {
+        Profile p = new Profile(1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
+        assertEquals(p.getType(), 1);
+        assertEquals(p.getName(), "name");
+        assertEquals(p.getMail(), "mail");
+        assertEquals(p.getContact(), 1);
+        assertEquals(p.getAddress(), "address");
+        assertEquals(p.getZipCode(), "zipCode");
+        assertEquals(p.getCity(), "city");
+        assertEquals(p.getNif(), 1);
+        assertEquals(p.getPhoto(), "photo");
+
+    }
+
+    @Test
+    public void ConstProfile2(){
+        Profile p = new Profile(1, 1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
+        assertEquals(p.getId(), 1);
+        assertEquals(p.getType(), 1);
+        assertEquals(p.getName(), "name");
+        assertEquals(p.getMail(), "mail");
+        assertEquals(p.getContact(), 1);
+        assertEquals(p.getAddress(), "address");
+        assertEquals(p.getZipCode(), "zipCode");
+        assertEquals(p.getCity(), "city");
+        assertEquals(p.getNif(), 1);
+        assertEquals(p.getPhoto(), "photo");
+    }
+
     @Test
     public void getId() {
         assertEquals(get.getId() >= 0,true);
@@ -68,6 +100,11 @@ class ProfileTest {
     @Test
     public void getNif() {
         assertEquals(get.getNif(), 9412);
+    }
+
+    @Test
+    public void setPhoto() {
+        assertEquals(get.getPhoto(), "lindo");
     }
 
     @Test
