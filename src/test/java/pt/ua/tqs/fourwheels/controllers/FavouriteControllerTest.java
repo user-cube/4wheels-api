@@ -41,7 +41,7 @@ public class FavouriteControllerTest {
     }
 
     @Test
-    public void getFavouriteWithTokenOk() {
+    public void getFavouritesWithTokenOk() {
         Favourite fav = new Favourite(1, "dummy@mail.com", 2);
         Mockito.when(favouriteRepository.findById(1)).thenReturn(java.util.Optional.of(fav));
     }

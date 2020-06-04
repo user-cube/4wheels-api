@@ -43,7 +43,7 @@ public class FavouriteTest {
     @Test
     public void setCar() {
         set.setCar(20);
-        assertEquals(set.getCar(), 10);
+        assertEquals(set.getCar(), 20);
     }
 
     @Test
