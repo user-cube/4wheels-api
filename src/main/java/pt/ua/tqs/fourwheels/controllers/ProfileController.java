@@ -21,17 +21,15 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/profile")
 public class ProfileController {
 
-    private Authentication authentication;
     private JSONObject json = new JSONObject();
     private JwtTokenUtil jwtTokenUtil;
     private ProfileRepository profileRepository;
     private Logger logger = LogManager.getLogger(ProfileController.class);
 
 
-    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil, Authentication authentication){
+    public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.authentication = authentication;
     }
 
     /**
@@ -52,14 +50,29 @@ public class ProfileController {
     }
     )
     @GetMapping(value = "/")
-    public ResponseEntity getInfo(HttpServletRequest request){
-        json.put("error", "Bad credentials");
+    public ResponseEntity<JSONObject> getInfo(HttpServletRequest request){
         try {
             String token = request.getHeader("Authorization").split(" ")[1]; // Get token from header
             String email = jwtTokenUtil.getUsernameFromToken(token);
-            return ResponseEntity.ok(profileRepository.findByMail(email));
+
+            Profile p = profileRepository.findByMail(email);
+            json.put("id", p.getId());
+            json.put("type", p.getType());
+            json.put("name", p.getName());
+            json.put("mail", email);
+            // json.put("mail", optionalProf.getMail());
+            json.put("contact", p.getContact());
+            json.put("address", p.getAddress());
+            json.put("zipCode", p.getZipCode());
+            json.put("city", p.getCity());
+            json.put("nif", p.getNif());
+            json.put("photo", p.getPhoto());
+
+            //return ResponseEntity.ok(profileRepository.findByMail(email));
+            return ResponseEntity.status(HttpStatus.OK).body(json);
         } catch (Exception e){
             logger.error(e.toString());
+            json.put("error", "Bad credentials");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -123,11 +136,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileRepository.deleteByMail(email));
     }
 
-    /**
-     * Edit Specific profile
-     * @param id
-     * @return
-     */
+
     @ApiOperation(value = "Edit profile details for a specific user.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully edited profile information."),
@@ -137,7 +146,7 @@ public class ProfileController {
     }
     )
     @PutMapping(value = "/")
-    public ResponseEntity editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
+    public ResponseEntity<JSONObject> editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
@@ -170,8 +179,9 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
 
         }catch (Exception e){
-                logger.error(e.toString());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
 }

@@ -49,13 +49,13 @@ class ProfileControllerTest {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository, jwtTokenUtil, authentication))
+        mockMvc = MockMvcBuilders.standaloneSetup(new ProfileController(profileRepository, jwtTokenUtil))
                 .alwaysExpect(forwardedUrl(null))
                 .build();
     }
 
     @Test
-    public void getInfoWithTokenOk() throws Exception {
+    public void getInfoWithToken() throws Exception {
         // Mocks
         Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, null);
         Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
@@ -89,6 +89,82 @@ class ProfileControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+    /**
+     * PUT TESTS
+     */
+    @Test
+    public void putInfoWithToken() throws Exception {
+        // Mocks
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json = new JSONObject();
+        json.put("id", profile.getId());
+        json.put("type", profile.getType());
+        json.put("name", profile.getName());
+        json.put("mail", profile.getMail());
+        json.put("contact", profile.getContact());
+        json.put("address", profile.getAddress());
+        json.put("zipCode", profile.getZipCode());
+        json.put("city", profile.getCity());
+        json.put("nif", profile.getNif());
+        json.put("photo", profile.getPhoto());
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        mockMvc.perform(put("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(200)));
+        MvcResult mock = mockMvc.perform(put("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(200)))
+                .andReturn();
+        assertEquals("application/json", mock.getResponse().getContentType());
+    }
+
+    @Test
+    public void putInfoWithoutToken() throws Exception{
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json = new JSONObject();
+        json.put("id", profile.getId());
+        json.put("type", profile.getType());
+        json.put("name", profile.getName());
+        json.put("mail", profile.getMail());
+        json.put("contact", profile.getContact());
+        json.put("address", profile.getAddress());
+        json.put("zipCode", profile.getZipCode());
+        json.put("city", profile.getCity());
+        json.put("nif", profile.getNif());
+        json.put("photo", profile.getPhoto());
+
+        mockMvc.perform(put("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)));
+
+        MvcResult mock = mockMvc.perform(put("/profile/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .andDo(print())
+                .andExpect((status().is(403)))
+                .andReturn();
+
+        assertEquals("application/json", mock.getResponse().getContentType());
+    }
+
+    /**
+     * DELETE
+     * @throws Exception
+     */
 
     @Test
     public void putInfoWithTokenOk() throws Exception {
@@ -129,40 +205,6 @@ class ProfileControllerTest {
 
         assertEquals("application/json", mock.getResponse().getContentType());
 
-    }
-
-
-    @Test
-    public void putInfoWithoutToken() throws Exception{
-        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
-        JSONObject json = new JSONObject();
-        json.put("id", profile.getId());
-        json.put("type", profile.getType());
-        json.put("name", profile.getName());
-        json.put("mail", profile.getMail());
-        json.put("contact", profile.getContact());
-        json.put("address", profile.getAddress());
-        json.put("zipCode", profile.getZipCode());
-        json.put("city", profile.getCity());
-        json.put("nif", profile.getNif());
-        json.put("photo", profile.getPhoto());
-
-        mockMvc.perform(put("/profile/")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8").content(String.valueOf(json)))
-                .andDo(print())
-                .andExpect((status().is(403)));
-
-        MvcResult mock = mockMvc.perform(put("/profile/")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8").content(String.valueOf(json)))
-                .andDo(print())
-                .andExpect((status().is(403)))
-                .andReturn();
-
-        assertEquals("application/json", mock.getResponse().getContentType());
     }
 
 
