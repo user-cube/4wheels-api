@@ -56,12 +56,14 @@ public class AnalyticsController {
                 long totalCars = carRepository.count();
                 int totalVendors = profileRepository.countAllByTypeEquals(1);
                 int totalAnalysts = profileRepository.countAllByTypeEquals(2);
+                int totalBuyers = profileRepository.countAllByTypeEquals(0);
                 int totalCarsOnSale = carRepository.countAllByCarStateEquals("selling");
                 int totalCarsSold = carRepository.countAllByCarStateEquals("sold");
 
                 JSONObject njson = new JSONObject();
                 njson.put("total_cars", totalCars);
                 njson.put("total_vendors", totalVendors);
+                njson.put("total_buyers", totalBuyers);
                 njson.put("total_analysts", totalAnalysts);
                 njson.put("total_cars_selling", totalCarsOnSale);
                 njson.put("total_cars_sold", totalCarsSold);
