@@ -37,7 +37,7 @@ class CarTest {
 
     @Test
     void setCarState() {
-        set.setCarState("Selling");
+        set.setCarState("selling");
         assertEquals("selling", set.getCarState());
     }
 
