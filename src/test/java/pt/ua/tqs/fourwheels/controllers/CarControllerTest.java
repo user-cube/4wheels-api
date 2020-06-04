@@ -62,7 +62,7 @@ class CarControllerTest {
                 .build();
 
         car = new Car();
-        car.setCarState("Sold");
+        car.setCarState("selling");
         car.setId(1);
         car.setPhoto("IMAGEMFANTAASTICA");
         car.setBrand("Mazda");
@@ -72,22 +72,24 @@ class CarControllerTest {
         car.setDescription("EUSOU Lesias");
         car.setKilometers(9412);
         car.setTypeOfFuel("Gasolina");
-        car.setOwnerMail("lmail@mail.com");
+        car.setOwnerMail(email);
         car.setPrice(12003);
 
         json = new JSONObject();
-        json.put("id", car.getId());
-        json.put("photo", car.getPhoto());
-        json.put("brand", car.getBrand());
-        json.put("model",car.getModel());
-        json.put("year", car.getYear());
-        json.put("month",car.getMonth());
-        json.put("description",car.getDescription());
-        json.put("kilometers", car.getKilometers());
-        json.put("typeOfFuel", car.getTypeOfFuel());
-        json.put("ownerMail", car.getOwnerMail());
-        json.put("price", car.getPrice());
-        json.put("carState", car.getCarState());
+        JSONObject pre = new JSONObject();
+        pre.put("id", car.getId());
+        pre.put("photo", car.getPhoto());
+        pre.put("brand", car.getBrand());
+        pre.put("model",car.getModel());
+        pre.put("year", car.getYear());
+        pre.put("month",car.getMonth());
+        pre.put("description",car.getDescription());
+        pre.put("kilometers", car.getKilometers());
+        pre.put("typeOfFuel", car.getTypeOfFuel());
+        pre.put("ownerMail", car.getOwnerMail());
+        pre.put("price", car.getPrice());
+        pre.put("carState", car.getCarState());
+        json.put("car",pre);
     }
 
     @Test
@@ -425,6 +427,7 @@ class CarControllerTest {
     @Test
     void editCarInfoWithToken()  throws Exception {
         Car optionalCar = car;
+        json = (JSONObject) json.get("car");
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
@@ -493,21 +496,15 @@ class CarControllerTest {
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
         updateCar.setCarState("sold");
         Mockito.when(carRepository.save(updateCar)).thenReturn(updateCar);
+
         json.replace("carState",updateCar.getCarState());
+
         mockMvc.perform(put("/car/sold/"+car.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(String.valueOf(json))
                 .header("Authorization", "Bearer " + accessToken))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         MvcResult mock = mockMvc.perform(put("/car/sold/"+car.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(String.valueOf(json))
                 .header("Authorization", "Bearer " + accessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -525,20 +522,12 @@ class CarControllerTest {
         updateCar.setCarState("sold");
         Mockito.when(carRepository.save(updateCar)).thenReturn(updateCar);
         json.replace("carState",updateCar.getCarState());
-        mockMvc.perform(put("/car/sold/"+car.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(String.valueOf(json)))
+        mockMvc.perform(put("/car/sold/"+car.getId()))
                 .andDo(print())
                 .andExpect(status().is(403));
 
 
-        MvcResult mock = mockMvc.perform(put("/car/sold/"+car.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8")
-                .content(String.valueOf(json)))
+        MvcResult mock = mockMvc.perform(put("/car/sold/"+car.getId()))
                 .andDo(print())
                 .andExpect(status().is(403))
                 .andReturn();
@@ -577,7 +566,7 @@ class CarControllerTest {
 
         mockMvc.perform(get("/car/vendor?page=1&limit=1")).andDo(print())
                 .andExpect(status().is(403))
-                .andExpect(jsonPath("$", hasKey("data")));
+                .andExpect(jsonPath("$", hasKey("error")));
 
         MvcResult mock = mockMvc.perform(get("/car/vendor?page=1&limit=1"))
                 .andExpect(status().is(403))
@@ -616,7 +605,7 @@ class CarControllerTest {
 
         mockMvc.perform(get("/car/vendor/selling?page=1&limit=1")).andDo(print())
                 .andExpect(status().is(403))
-                .andExpect(jsonPath("$", hasKey("data")));
+                .andExpect(jsonPath("$", hasKey("error")));
 
         MvcResult mock = mockMvc.perform(get("/car/vendor/selling?page=1&limit=1"))
                 .andExpect(status().is(403))
@@ -658,7 +647,7 @@ class CarControllerTest {
 
         mockMvc.perform(get("/car/vendor/sold?page=1&limit=1")).andDo(print())
                 .andExpect(status().is(403))
-                .andExpect(jsonPath("$", hasKey("data")));
+                .andExpect(jsonPath("$", hasKey("error")));
 
         MvcResult mock = mockMvc.perform(get("/car/vendor/sold?page=1&limit=1"))
                 .andExpect(status().is(403))

@@ -86,21 +86,24 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            /*if(email == null || email == ""){
-                throw new Exception();
-            }*/
-            json.put("id", car.getCar().getId());
-            json.put("photo", car.getCar().getPhoto());
-            json.put("brand", car.getCar().getBrand());
-            json.put("model",car.getCar().getModel());
-            json.put("year", car.getCar().getYear());
-            json.put("month",car.getCar().getMonth());
-            json.put("description",car.getCar().getDescription());
-            json.put("kilometers", car.getCar().getKilometers());
-            json.put("typeOfFuel", car.getCar().getTypeOfFuel());
-            json.put("ownerMail", car.getCar().getOwnerMail());
-            json.put("price", car.getCar().getPrice());
-            json.put("carState", car.getCar().getCarState());
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
+            JSONObject pre = new JSONObject();
+            pre.put("id",car.getCar().getId());
+            pre.put("photo", car.getCar().getPhoto());
+            pre.put("brand", car.getCar().getBrand());
+            pre.put("model",car.getCar().getModel());
+            pre.put("year", car.getCar().getYear());
+            pre.put("month",car.getCar().getMonth());
+            pre.put("description",car.getCar().getDescription());
+            pre.put("kilometers", car.getCar().getKilometers());
+            pre.put("typeOfFuel", car.getCar().getTypeOfFuel());
+            pre.put("ownerMail", car.getCar().getOwnerMail());
+            pre.put("price", car.getCar().getPrice());
+            pre.put("carState", car.getCar().getCarState());
+            json.put("car",pre);
             carRepository.save(car.getCar());
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
@@ -125,11 +128,12 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            /*if(email == null || email == ""){
-                throw new Exception();
-            }*/
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
             carRepository.deleteById(id);
-            json.put("success","Successfully deleted");
+            json.put("msg","Successfully deleted");
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
             logger.error(e.toString());
@@ -244,12 +248,14 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            /*if(email == null || email == ""){
-                throw new Exception();
-            }*/
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
 
             Car optionalCar = carRepository.findCarsById(id);
-
+            System.out.println(optionalCar.getOwnerMail());
+            System.out.println(email);
             if(optionalCar.getOwnerMail().equals(email)) {
                 optionalCar.setPhoto(newCar.getPhoto());
                 optionalCar.setBrand(newCar.getBrand());
@@ -305,17 +311,18 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            /*if(email == null || email == ""){
-                throw new Exception();
-            }*/
-
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
             Car updateCar = carRepository.findCarsById(id);
 
             if(updateCar.getOwnerMail().equals(email)){
                 updateCar.setCarState("sold");
                 carRepository.save(updateCar);
             }else {
-                throw new Exception();
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             json.put("id", updateCar.getId());
             json.put("photo", updateCar.getPhoto());
@@ -352,18 +359,31 @@ public class CarController {
     )
     @GetMapping(value = "/vendor")
     public ResponseEntity<JSONObject> getAllCarsFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        Page<Car> carPage =  carRepository.findCarsByOwnerMail(email, pageAndLimit);
-        int totalPages = carPage.getTotalPages();
-        List<Car> cars = carPage.getContent();
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
 
-        JSONObject json = new JSONObject();
-        json.put("data", cars);
-        json.put("totalpages", totalPages);
-        return ResponseEntity.status(HttpStatus.OK).body(json);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
+
+            Page<Car> carPage =  carRepository.findCarsByOwnerMail(email, pageAndLimit);
+            int totalPages = carPage.getTotalPages();
+            List<Car> cars = carPage.getContent();
+
+            JSONObject json = new JSONObject();
+            json.put("data", cars);
+            json.put("totalpages", totalPages);
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 
     /**
@@ -380,18 +400,31 @@ public class CarController {
     )
     @GetMapping(value = "/vendor/selling")
     public ResponseEntity<JSONObject> getAllCarsOnSaleFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "selling", pageAndLimit);
-        int totalPages = carPage.getTotalPages();
-        List<Car> cars = carPage.getContent();
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
 
-        JSONObject json = new JSONObject();
-        json.put("data", cars);
-        json.put("totalpages", totalPages);
-        return ResponseEntity.status(HttpStatus.OK).body(json);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
+
+            Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "selling", pageAndLimit);
+            int totalPages = carPage.getTotalPages();
+            List<Car> cars = carPage.getContent();
+
+            JSONObject json = new JSONObject();
+            json.put("data", cars);
+            json.put("totalpages", totalPages);
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 
     /**
@@ -408,17 +441,30 @@ public class CarController {
     )
     @GetMapping(value = "/vendor/sold")
     public ResponseEntity<JSONObject> getAllCarsSoldFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "sold", pageAndLimit);
-        int totalPages = carPage.getTotalPages();
-        List<Car> cars = carPage.getContent();
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            if(email == null || email.equals("")) {
+                json.put("error", "Bad credentials");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            }
 
-        JSONObject json = new JSONObject();
-        json.put("data", cars);
-        json.put("totalpages", totalPages);
-        return ResponseEntity.status(HttpStatus.OK).body(json);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
+
+            Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "sold", pageAndLimit);
+            int totalPages = carPage.getTotalPages();
+            List<Car> cars = carPage.getContent();
+
+            JSONObject json = new JSONObject();
+            json.put("data", cars);
+            json.put("totalpages", totalPages);
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 }
