@@ -27,6 +27,19 @@ public class CarController {
     private JwtTokenUtil jwtTokenUtil;
     private JSONObject json = new JSONObject();
     private Logger logger = LogManager.getLogger(CarController.class);
+    private String errorKey = "error";
+    private String errorMsg = "Bad credentials";
+    private String photo = "photo";
+    private String brand = "brand";
+    private String model = "model";
+    private String month = "month";
+    private String description = "description";
+    private String kilometers = "kilometers";
+    private String typeOfFuel = "typeOfFuel";
+    private String ownerMail = "ownerMail";
+    private String price = "price";
+    private String carState = "carState";
+
 
     public CarController(CarRepository carRepository, JwtTokenUtil jwtTokenUtil) {
         this.carRepository = carRepository;
@@ -86,7 +99,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             JSONObject pre = new JSONObject();
@@ -128,7 +141,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             carRepository.deleteById(id);
@@ -248,7 +261,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
 
@@ -282,7 +295,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put("error", "Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -309,7 +322,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             Car updateCar = carRepository.findCarsById(id);
@@ -318,7 +331,7 @@ public class CarController {
                 updateCar.setCarState("sold");
                 carRepository.save(updateCar);
             }else {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
             json.put("id", updateCar.getId());
@@ -336,7 +349,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put("error", "Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -362,7 +375,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
 
@@ -378,7 +391,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put("error", "Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -403,7 +416,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
 
@@ -419,7 +432,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put("error", "Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -444,7 +457,7 @@ public class CarController {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(email == null || email.equals("")) {
-                json.put("error", "Bad credentials");
+                json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
 
@@ -460,7 +473,7 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put("error", "Bad credentials");
+            json.put(errorKey,errorMsg);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }

@@ -16,7 +16,7 @@ class CarTest {
     public void setUp(){
         set = new Car();
         get = new Car();
-        get.setCarState("Sold");
+        get.setCarState("sold");
         get.setId(1);
         get.setPhoto("IMAGEMFANTAASTICA");
         get.setBrand("Mazda");
@@ -32,133 +32,133 @@ class CarTest {
 
     @Test
     void getCarState() {
-        assertEquals(get.getCarState(),"Sold");
+        assertEquals("sold",get.getCarState());
     }
 
     @Test
     void setCarState() {
         set.setCarState("Selling");
-        assertEquals(set.getCarState(), "Selling");
+        assertEquals("selling", set.getCarState());
     }
 
     @Test
     void getId() {
-        assertEquals(get.getId() >= 0, true);
+        assertEquals(true, get.getId() >= 0);
     }
 
     @Test
     void setId() {
         set.setId(2);
-        assertEquals(set.getId() == 2,true);
+        assertEquals(true,set.getId() == 2);
     }
 
     @Test
     void getPhoto() {
-        assertEquals(get.getPhoto(), "IMAGEMFANTAASTICA");
+        assertEquals("IMAGEMFANTAASTICA",get.getPhoto());
     }
 
     @Test
     void setPhoto() {
         set.setPhoto("image2.0");
-        assertEquals(set.getPhoto(), "image2.0");
+        assertEquals("image2.0",set.getPhoto());
     }
 
     @Test
     void getBrand() {
-        assertEquals(get.getBrand(), "Mazda");
+        assertEquals("Mazda",get.getBrand());
     }
 
     @Test
     void setBrand() {
         set.setBrand("Audi");
-        assertEquals(set.getBrand(),"Audi");
+        assertEquals("Audi",set.getBrand());
     }
 
     @Test
     void getModel() {
-        assertEquals(get.getModel(), "555");
+        assertEquals("555",get.getModel());
     }
 
     @Test
     void setModel() {
         set.setModel("CX777");
-        assertEquals(set.getModel(), "CX777");
+        assertEquals("CX777",set.getModel());
     }
 
     @Test
     void getYear() {
-        assertEquals(get.getYear(),1999);
+        assertEquals(1999,get.getYear());
     }
 
     @Test
     void setYear() {
         set.setYear(20200);
-        assertEquals(set.getYear(), 20200);
+        assertEquals(20200, set.getYear());
     }
 
     @Test
     void getMonth() {
-        assertEquals(get.getMonth(),5);
+        assertEquals(5,get.getMonth());
     }
 
     @Test
     void setMonth() {
         set.setMonth(5);
-        assertEquals(set.getMonth(),5);
+        assertEquals(5,set.getMonth());
     }
 
     @Test
     void getDescription() {
-        assertEquals(get.getDescription(),"EUSOU Lesias");
+        assertEquals("EUSOU Lesias",get.getDescription());
     }
 
     @Test
     void setDescription() {
         set.setDescription("Hello please buy my car!");
-        assertEquals(set.getDescription(),"Hello please buy my car!");
+        assertEquals("Hello please buy my car!",set.getDescription());
     }
 
     @Test
     void getKilometers() {
-        assertEquals(get.getKilometers(),9412);
+        assertEquals(9412,get.getKilometers());
     }
 
     @Test
     void setKilometers() {
         set.setKilometers(999999999);
-        assertEquals(set.getKilometers(),999999999);
+        assertEquals(999999999,set.getKilometers());
     }
 
     @Test
     void getTypeOfFuel() {
-        assertEquals(get.getTypeOfFuel(),"Gasolina");
+        assertEquals("Gasolina",get.getTypeOfFuel());
     }
 
     @Test
     void setTypeOfFuel() {
         set.setTypeOfFuel("Electric");
-        assertEquals(set.getTypeOfFuel(),"Electric");
+        assertEquals("Electric",set.getTypeOfFuel());
     }
 
     @Test
     void getOwnerMail() {
-        assertEquals(get.getOwnerMail(),"BestMail@EU.pt");
+        assertEquals("BestMail@EU.pt",get.getOwnerMail());
     }
 
     @Test
     void setOwnerMail() {
         set.setOwnerMail("MyMail@mail.ua.pt");
-        assertEquals(set.getOwnerMail(),"MyMail@mail.ua.pt");
+        assertEquals("MyMail@mail.ua.pt",set.getOwnerMail());
     }
 
     @Test
     void getPrice() {
-        assertEquals(get.getPrice(),12003,10);
+        assertEquals(12003,get.getPrice(),10);
     }
 
     @Test
     void setPrice() {
         set.setPrice(999999999);
-        assertEquals(set.getPrice(),999999999,10);
+        assertEquals(999999999,set.getPrice(),10);
     }
 }
