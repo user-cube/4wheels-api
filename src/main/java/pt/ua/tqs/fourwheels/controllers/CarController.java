@@ -16,7 +16,6 @@ import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.models.CarModel;
 import pt.ua.tqs.fourwheels.entities.Car;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

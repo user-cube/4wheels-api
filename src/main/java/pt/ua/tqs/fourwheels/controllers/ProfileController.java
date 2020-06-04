@@ -34,6 +34,15 @@ public class ProfileController {
         this.authentication = authentication;
     }
 
+    /**
+     * Get profile information from user
+     * given a token in authorization
+     * header.
+     *
+     * @param request headers
+     * @return a list with all user information
+     * otherwise return HTTP STATUS 403.
+     */
     @ApiOperation(value = "Get profile info for a specific user.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved user profile information."),
