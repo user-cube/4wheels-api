@@ -98,7 +98,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -140,7 +140,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -260,7 +260,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -277,6 +277,9 @@ public class CarController {
                 optionalCar.setTypeOfFuel(newCar.getCar().getTypeOfFuel());
                 optionalCar.setOwnerMail(newCar.getCar().getOwnerMail());
                 optionalCar.setPrice(newCar.getCar().getPrice());
+            }else{
+                json.put(errorKey,errorMsg);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
 
             json.put("id", optionalCar.getId());
@@ -321,7 +324,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -374,7 +377,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -415,7 +418,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -456,7 +459,7 @@ public class CarController {
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
-            if(email == null || email.equals("")) {
+            if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
@@ -477,4 +480,5 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
+    private boolean checkMail(String email){return email == null || email.equals("");}
 }

@@ -200,6 +200,35 @@ class CarControllerTest {
     }
 
     @Test
+    void insertCarWithWrongToken()  throws Exception {
+        // Mocks
+        Mockito.when(carRepository.save(car)).thenReturn(car);
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+
+        mockMvc.perform(post("/car/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(post("/car/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
     void insertCarWithoutToken()  throws Exception {
         // Mocks
         mockMvc.perform(post("/car/")
@@ -237,6 +266,26 @@ class CarControllerTest {
                 .header("Authorization", "Bearer " + accessToken))
                 .andDo(print())
                 .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
+    void deleteCarWithInvalidToken() throws  Exception {
+        // Mocks
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+
+        mockMvc.perform(delete("/car/"+ car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(delete("/car/"+ car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
                 .andReturn();
 
         assertEquals("application/json",
@@ -458,6 +507,72 @@ class CarControllerTest {
     }
 
     @Test
+    void editCarInfoWithInvalidToken()  throws Exception {
+        Car optionalCar = car;
+        // Mocks
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+        Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
+        optionalCar.setYear(200200);
+        Mockito.when(carRepository.save(optionalCar)).thenReturn(optionalCar);
+        json.replace("year",optionalCar.getYear());
+
+        mockMvc.perform(put("/car/"+car.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(put("/car/"+car.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
+    void editCarInfoWithWrongToken()  throws Exception {
+        Car optionalCar = car;
+        // Mocks
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("mailinvalido@mail.com");
+        Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
+        optionalCar.setYear(200200);
+        Mockito.when(carRepository.save(optionalCar)).thenReturn(optionalCar);
+        json.replace("year",optionalCar.getYear());
+
+        mockMvc.perform(put("/car/"+car.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(put("/car/"+car.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(String.valueOf(json))
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
     void editCarInfoWithoutToken()  throws Exception {
         Car optionalCar = car;
         // Mocks
@@ -514,6 +629,58 @@ class CarControllerTest {
     }
 
     @Test
+    void markCarAsSoldWithInvalidToken()  throws Exception {
+        Car updateCar = car;
+        // Mocks
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+        Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
+        updateCar.setCarState("sold");
+        Mockito.when(carRepository.save(updateCar)).thenReturn(updateCar);
+
+        json.replace("carState",updateCar.getCarState());
+
+        mockMvc.perform(put("/car/sold/"+car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(put("/car/sold/"+car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
+    void markCarAsSoldWithWrongToken()  throws Exception {
+        Car updateCar = car;
+        // Mocks
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("mailInvalido@mail.com");
+        Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
+        updateCar.setCarState("sold");
+        Mockito.when(carRepository.save(updateCar)).thenReturn(updateCar);
+
+        json.replace("carState",updateCar.getCarState());
+
+        mockMvc.perform(put("/car/sold/"+car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(put("/car/sold/"+car.getId())
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    @Test
     void markCarAsSoldWithoutToken()  throws Exception {
         Car updateCar = car;
         // Mocks
@@ -542,7 +709,7 @@ class CarControllerTest {
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
         // Mocks
         Mockito.when(carRepository.findCarsByOwnerMail(car.getOwnerMail(), PageRequest.of(1,1))).thenReturn(carPage);
-        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(car.getOwnerMail());
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
 
         mockMvc.perform(get("/car/vendor?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
                 .andExpect(status().isOk())
@@ -555,6 +722,27 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
+    @Test
+    void getAllCarsFromVendorWithInvalidToken() throws Exception {
+        List<Car> cars = new ArrayList<>();
+        cars.add(car);
+        Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
+        // Mocks
+        Mockito.when(carRepository.findCarsByOwnerMail(car.getOwnerMail(), PageRequest.of(1,1))).thenReturn(carPage);
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+
+        mockMvc.perform(get("/car/vendor?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/car/vendor?page=1&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
     @Test
     void getAllCarsFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -574,6 +762,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void getAllCarsOnSaleFromVendorWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -581,7 +770,7 @@ class CarControllerTest {
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
         // Mocks
         Mockito.when(carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(car.getOwnerMail(),"selling", PageRequest.of(1,1))).thenReturn(carPage);
-        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(car.getOwnerMail());
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
 
         mockMvc.perform(get("/car/vendor/selling?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
                 .andExpect(status().isOk())
@@ -594,6 +783,27 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
+    @Test
+    void getAllCarsOnSaleFromVendorWithInvalidToken() throws Exception {
+        List<Car> cars = new ArrayList<>();
+        cars.add(car);
+        Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
+        // Mocks
+        Mockito.when(carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(car.getOwnerMail(),"selling", PageRequest.of(1,1))).thenReturn(carPage);
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+
+        mockMvc.perform(get("/car/vendor/selling?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/car/vendor/selling?page=1&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
     @Test
     void getAllCarsOnSaleFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -622,7 +832,7 @@ class CarControllerTest {
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
         // Mocks
         Mockito.when(carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(car.getOwnerMail(),"sold", PageRequest.of(1,1))).thenReturn(carPage);
-        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(car.getOwnerMail());
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
 
         mockMvc.perform(get("/car/vendor/sold?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
                 .andExpect(status().isOk())
@@ -635,6 +845,28 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
+    @Test
+    void getAllCarsSoldFromVendorWithInvalidToken() throws Exception {
+        List<Car> cars = new ArrayList<>();
+        car.setCarState("sold");
+        cars.add(car);
+        Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
+        // Mocks
+        Mockito.when(carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(car.getOwnerMail(),"sold", PageRequest.of(1,1))).thenReturn(carPage);
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+
+        mockMvc.perform(get("/car/vendor/sold?page=1&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/car/vendor/sold?page=1&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
     @Test
     void getAllCarsSoldFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
