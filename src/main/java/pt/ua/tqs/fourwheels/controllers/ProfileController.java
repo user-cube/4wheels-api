@@ -89,7 +89,14 @@ public class ProfileController {
         }
     }
 
-
+    /**
+     * Store a profile with
+     * a given post.
+     * @param newProfile profile to add.
+     * @param request authorization header.
+     * @return HTTP STATUS Code 200
+     * otherwise return HTTP STATUS 403.
+     */
     @ApiOperation(value = "Insert a profile on the database.", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully inserted user profile information."),
