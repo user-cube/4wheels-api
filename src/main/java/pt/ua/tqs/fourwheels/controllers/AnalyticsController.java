@@ -26,8 +26,11 @@ public class AnalyticsController {
     private ProfileRepository profileRepository;
     private CarRepository carRepository;
     private JwtTokenUtil jwtTokenUtil;
-    private Logger logger = LogManager.getLogger(ProfileController.class);
+    private Logger logger = LogManager.getLogger(AnalyticsController.class);
     private JSONObject json = new JSONObject();
+    private String auth = "Authorization";
+    private String error = "error";
+    private String badCredentials = "Bad Credentials";
 
     public AnalyticsController(ProfileRepository profileRepository, CarRepository carRepository , JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
@@ -46,7 +49,7 @@ public class AnalyticsController {
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllAnalytics(HttpServletRequest request){
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             if (user.getType() == 2) {
@@ -68,7 +71,7 @@ public class AnalyticsController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
         }   catch (Exception e){
-            json.put("error", "Bad credentials");
+            json.put(error, badCredentials);
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -86,7 +89,7 @@ public class AnalyticsController {
     @GetMapping(value = "/vendors/cars/registered")
     public ResponseEntity<JSONObject> getNumberOfCarsRegisteredByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsRegisteredByUser;
@@ -105,7 +108,7 @@ public class AnalyticsController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
+            json.put(error, badCredentials);
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -122,7 +125,7 @@ public class AnalyticsController {
     @GetMapping(value = "/vendors/cars/sold")
     public ResponseEntity<JSONObject> getNumberOfCarsSoldByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsSoldByUser;
@@ -142,7 +145,7 @@ public class AnalyticsController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
+            json.put(error, badCredentials);
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -159,7 +162,7 @@ public class AnalyticsController {
     @GetMapping(value = "/vendors/cars/selling")
     public ResponseEntity<JSONObject> getNumberOfCarsOnSaleByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsOnSaleByUser;
@@ -179,7 +182,7 @@ public class AnalyticsController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
+            json.put(error, badCredentials);
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
