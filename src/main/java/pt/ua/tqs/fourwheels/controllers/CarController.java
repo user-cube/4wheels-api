@@ -13,14 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
-import pt.ua.tqs.fourwheels.dto.CarDTO;
+import pt.ua.tqs.fourwheels.models.CarModel;
 import pt.ua.tqs.fourwheels.entities.Car;
-import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -83,7 +80,7 @@ public class CarController {
     }
     )
     @PostMapping(value = "/")
-    public ResponseEntity<JSONObject> insertCar(@RequestBody CarDTO car,HttpServletRequest request){
+    public ResponseEntity<JSONObject> insertCar(@RequestBody CarModel car,HttpServletRequest request){
 
         String email = "";
         try {
@@ -123,8 +120,22 @@ public class CarController {
     }
     )
     @DeleteMapping(value = "/{id}")
-    public void deleteCar(@PathVariable("id") int id){
-        carRepository.deleteById(id);
+    public ResponseEntity<JSONObject> deleteCar(@PathVariable("id") int id,HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            /*if(email == null || email == ""){
+                throw new Exception();
+            }*/
+            carRepository.deleteById(id);
+            json.put("success","Successfully deleted");
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            json.put("error","Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 
     @ApiOperation(value = "Search a car by brand.", response = Iterable.class)
@@ -227,30 +238,49 @@ public class CarController {
     }
     )
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Car> editCarInfo(@RequestBody Car newCar, @PathVariable("id") int id, HttpServletRequest request){
+    public ResponseEntity<JSONObject> editCarInfo(@RequestBody Car newCar, @PathVariable("id") int id, HttpServletRequest request){
 
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            /*if(email == null || email == ""){
+                throw new Exception();
+            }*/
 
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+            Car optionalCar = carRepository.findCarsById(id);
 
-        Car optionalCar = carRepository.findCarsById(id);
+            if(optionalCar.getOwnerMail().equals(email)) {
+                optionalCar.setPhoto(newCar.getPhoto());
+                optionalCar.setBrand(newCar.getBrand());
+                optionalCar.setModel(newCar.getModel());
+                optionalCar.setYear(newCar.getYear());
+                optionalCar.setMonth(newCar.getMonth());
+                optionalCar.setDescription(newCar.getDescription());
+                optionalCar.setKilometers(newCar.getKilometers());
+                optionalCar.setTypeOfFuel(newCar.getTypeOfFuel());
+                optionalCar.setOwnerMail(newCar.getOwnerMail());
+                optionalCar.setPrice(newCar.getPrice());
+            }
 
-        if(optionalCar.getOwnerMail().equals(email)){
-            optionalCar.setPhoto(newCar.getPhoto());
-            optionalCar.setBrand(newCar.getBrand());
-            optionalCar.setModel(newCar.getModel());
-            optionalCar.setYear(newCar.getYear());
-            optionalCar.setMonth(newCar.getMonth());
-            optionalCar.setDescription(newCar.getDescription());
-            optionalCar.setKilometers(newCar.getKilometers());
-            optionalCar.setTypeOfFuel(newCar.getTypeOfFuel());
-            optionalCar.setOwnerMail(newCar.getOwnerMail());
-            optionalCar.setPrice(newCar.getPrice());
-
-            return ResponseEntity.ok(carRepository.save(optionalCar));
-
-        }else {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            json.put("id", optionalCar.getId());
+            json.put("photo", optionalCar.getPhoto());
+            json.put("brand", optionalCar.getBrand());
+            json.put("model", optionalCar.getModel());
+            json.put("year", optionalCar.getYear());
+            json.put("month", optionalCar.getMonth());
+            json.put("description", optionalCar.getDescription());
+            json.put("kilometers", optionalCar.getKilometers());
+            json.put("typeOfFuel", optionalCar.getTypeOfFuel());
+            json.put("ownerMail", optionalCar.getOwnerMail());
+            json.put("price", optionalCar.getPrice());
+            json.put("carState", optionalCar.getCarState());
+            carRepository.save(optionalCar);
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
 
@@ -269,17 +299,41 @@ public class CarController {
     }
     )
     @PutMapping(value = "sold/{id}")
-    public ResponseEntity<Car> markCarAsSold(@PathVariable("id") int id, HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+    public ResponseEntity<JSONObject> markCarAsSold(@PathVariable("id") int id, HttpServletRequest request){
 
-        Car updateCar = carRepository.findCarsById(id);
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            /*if(email == null || email == ""){
+                throw new Exception();
+            }*/
 
-        if(updateCar.getOwnerMail().equals(email)){
-            updateCar.setCarState("sold");
-            return ResponseEntity.ok(carRepository.save(updateCar));
-        }else {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+            Car updateCar = carRepository.findCarsById(id);
+
+            if(updateCar.getOwnerMail().equals(email)){
+                updateCar.setCarState("sold");
+                carRepository.save(updateCar);
+            }else {
+                throw new Exception();
+            }
+            json.put("id", updateCar.getId());
+            json.put("photo", updateCar.getPhoto());
+            json.put("brand", updateCar.getBrand());
+            json.put("model", updateCar.getModel());
+            json.put("year", updateCar.getYear());
+            json.put("month", updateCar.getMonth());
+            json.put("description", updateCar.getDescription());
+            json.put("kilometers", updateCar.getKilometers());
+            json.put("typeOfFuel", updateCar.getTypeOfFuel());
+            json.put("ownerMail", updateCar.getOwnerMail());
+            json.put("price", updateCar.getPrice());
+            json.put("carState", updateCar.getCarState());
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put("error", "Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
 

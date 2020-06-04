@@ -1,4 +1,4 @@
-package pt.ua.tqs.fourwheels.dto;
+package pt.ua.tqs.fourwheels.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import pt.ua.tqs.fourwheels.entities.Car;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class CarDTO {
+public class CarModel {
     private Car car;
 
     public Car getCar() {

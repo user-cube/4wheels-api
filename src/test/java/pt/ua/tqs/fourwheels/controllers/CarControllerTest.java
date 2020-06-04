@@ -147,6 +147,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void getAllCarsWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -166,6 +167,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void insertCarWithToken()  throws Exception {
         // Mocks
@@ -194,6 +196,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void insertCarWithoutToken()  throws Exception {
         // Mocks
@@ -234,26 +237,27 @@ class CarControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertEquals(null,
+        assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
-    /*deleteCar doesn't have token verification*/
+
     @Test
     void deleteCarWithoutToken() throws  Exception {
         // Mocks
 
         mockMvc.perform(delete("/car/"+ car.getId()))
                 .andDo(print())
-                .andExpect(status().is(200));
+                .andExpect(status().is(403));
 
         MvcResult mock = mockMvc.perform(delete("/car/"+ car.getId()))
                 .andDo(print())
-                .andExpect(status().is(200))
+                .andExpect(status().is(403))
                 .andReturn();
 
-        assertEquals(null,
+        assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void searchByBrandWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -274,6 +278,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void searchByBrandWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -314,6 +319,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void searchByModelWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -354,6 +360,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void searchByYearWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -394,6 +401,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void searchByFuelTypeWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
@@ -446,6 +454,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void editCarInfoWithoutToken()  throws Exception {
         Car optionalCar = car;
@@ -507,6 +516,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void markCarAsSoldWithoutToken()  throws Exception {
         Car updateCar = car;
@@ -536,6 +546,7 @@ class CarControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
     @Test
     void getAllCarsFromVendorWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
