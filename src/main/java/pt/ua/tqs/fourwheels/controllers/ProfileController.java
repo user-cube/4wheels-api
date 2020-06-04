@@ -39,6 +39,8 @@ public class ProfileController {
     private String photo = "photo";
     private String error = "error";
 
+    private String bdCred = "Bad Credentials!";
+
     public ProfileController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -82,7 +84,7 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } catch (Exception e){
             logger.error(e.toString());
-            json.put(error, "Bad credentials");
+            json.put(error, bdCred);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
@@ -97,16 +99,14 @@ public class ProfileController {
     }
     )
     @PostMapping(value = "/")
-    // public Profile insertProfile(@RequestBody Profile user){
     public ResponseEntity<JSONObject> insertProfile(@RequestBody ProfileModel newProfile, HttpServletRequest request){
         String email = "";
         try {
             String token = request.getHeader(auth).split(" ")[1];
-            System.out.println(token);
             email = jwtTokenUtil.getUsernameFromToken(token);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put(error, "Bad credentials");
+            json.put(error, bdCred);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
 
@@ -142,7 +142,7 @@ public class ProfileController {
             email = jwtTokenUtil.getUsernameFromToken(token);
         }catch (Exception e){
             logger.error(e.toString());
-            json.put(error, "Bad credentials");
+            json.put(error, bdCred);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
         profileRepository.deleteByMail(email);
@@ -191,7 +191,7 @@ public class ProfileController {
 
         }catch (Exception e){
             logger.error(e.toString());
-            json.put(error, "Bad credentials");
+            json.put(error, bdCred);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
