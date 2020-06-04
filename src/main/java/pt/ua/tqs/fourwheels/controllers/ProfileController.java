@@ -156,20 +156,20 @@ public class ProfileController {
     }
     )
     @PutMapping(value = "/")
-    public ResponseEntity<JSONObject> editProfileInfo(@RequestBody Profile newProfile, HttpServletRequest request){
+    public ResponseEntity<JSONObject> editProfileInfo(@RequestBody ProfileModel newProfile, HttpServletRequest request){
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
 
             Profile optionalProf = profileRepository.findByMail(email);
-            optionalProf.setPhoto(newProfile.getPhoto());
-            optionalProf.setName(newProfile.getName());
-            optionalProf.setContact(newProfile.getContact());
-            optionalProf.setAddress(newProfile.getAddress());
-            optionalProf.setZipCode(newProfile.getZipCode());
-            optionalProf.setCity(newProfile.getCity());
-            optionalProf.setNif(newProfile.getNif());
+            optionalProf.setPhoto(newProfile.getProfile().getPhoto());
+            optionalProf.setName(newProfile.getProfile().getName());
+            optionalProf.setContact(newProfile.getProfile().getContact());
+            optionalProf.setAddress(newProfile.getProfile().getAddress());
+            optionalProf.setZipCode(newProfile.getProfile().getZipCode());
+            optionalProf.setCity(newProfile.getProfile().getCity());
+            optionalProf.setNif(newProfile.getProfile().getNif());
 
             profileRepository.save(optionalProf);
 
@@ -189,6 +189,7 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.OK).body(json);
 
         }catch (Exception e){
+            System.out.println("AQUI EXCE" + e.toString());
             logger.error(e.toString());
             json.put("error", "Bad credentials");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
