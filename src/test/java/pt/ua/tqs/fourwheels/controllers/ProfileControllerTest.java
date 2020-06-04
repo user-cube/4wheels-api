@@ -53,6 +53,11 @@ class ProfileControllerTest {
                 .build();
     }
 
+    /**
+     * GET Profile Controller Tests
+     * with and without token
+     * @throws Exception
+     */
     @Test
     public void getInfoWithToken() throws Exception {
         // Mocks
@@ -75,7 +80,6 @@ class ProfileControllerTest {
                 mock.getResponse().getContentType());
 
     }
-
     @Test
     public void getInfoWithoutToken() throws Exception{
         mockMvc.perform(get("/profile/")).andDo(print())
@@ -88,8 +92,13 @@ class ProfileControllerTest {
         assertEquals("application/json",
                 mock.getResponse().getContentType());
     }
+
+
+
     /**
-     * PUT TESTS
+     * PUT Profile Controller Tests
+     * with and without token
+     * @throws Exception
      */
     @Test
     public void putInfoWithToken() throws Exception {
@@ -135,7 +144,6 @@ class ProfileControllerTest {
 
         assertEquals("application/json", mock.getResponse().getContentType());
     }
-
     @Test
     public void putInfoWithoutToken() throws Exception{
         Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
@@ -169,40 +177,89 @@ class ProfileControllerTest {
         assertEquals("application/json", mock.getResponse().getContentType());
     }
 
+
+
     /**
-     * DELETE
+     * POST Profile Controller Tests
+     * with and without token
      * @throws Exception
      */
-
-
     @Test
-    public void deleteInfoWithoutToken() throws Exception{
-
+    public void postInfoWithToken() throws Exception {
+        // Mocks
         Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
-        JSONObject json = new JSONObject();
-        json.put("id", profile.getId());
-        json.put("type", profile.getType());
-        json.put("name", profile.getName());
-        json.put("mail", profile.getMail());
-        json.put("contact", profile.getContact());
-        json.put("address", profile.getAddress());
-        json.put("zipCode", profile.getZipCode());
-        json.put("city", profile.getCity());
-        json.put("nif", profile.getNif());
-        json.put("photo", profile.getPhoto());
+        JSONObject json1 = new JSONObject();
+        JSONObject json2 = new JSONObject();
 
+        json1.put("id", profile.getId());
+        json1.put("type", profile.getType());
+        json1.put("name", profile.getName());
+        json1.put("mail", profile.getMail());
+        json1.put("contact", profile.getContact());
+        json1.put("address", profile.getAddress());
+        json1.put("zipCode", profile.getZipCode());
+        json1.put("city", profile.getCity());
+        json1.put("nif", profile.getNif());
+        json1.put("photo", profile.getPhoto());
+
+        json2.put("profile", json1);
+
+        System.out.println("JSON" + json2.toString());
+
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+
+        mockMvc.perform(post("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json2)))
+                .andDo(print())
+                .andExpect((status().is(200)));
+        MvcResult mock = mockMvc.perform(post("/profile/")
+                .header("Authorization", "Bearer " + accessToken)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8").content(String.valueOf(json2)))
+                .andDo(print())
+                .andExpect((status().is(200)))
+                .andReturn();
+
+        assertEquals("application/json", mock.getResponse().getContentType());
+    }
+    @Test
+    public void postInfoWithoutToken() throws Exception{
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+        JSONObject json1 = new JSONObject();
+        JSONObject json2 = new JSONObject();
+
+        json1.put("id", profile.getId());
+        json1.put("type", profile.getType());
+        json1.put("name", profile.getName());
+        json1.put("mail", profile.getMail());
+        json1.put("contact", profile.getContact());
+        json1.put("address", profile.getAddress());
+        json1.put("zipCode", profile.getZipCode());
+        json1.put("city", profile.getCity());
+        json1.put("nif", profile.getNif());
+        json1.put("photo", profile.getPhoto());
+
+        json2.put("profile", json1);
+
+        System.out.println("JSON" + json2.toString());
 
         mockMvc.perform(post("/profile/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .characterEncoding("UTF-8").content(String.valueOf(json2)))
                 .andDo(print())
                 .andExpect((status().is(403)));
 
         MvcResult mock = mockMvc.perform(post("/profile/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
-                .characterEncoding("UTF-8").content(String.valueOf(json)))
+                .characterEncoding("UTF-8").content(String.valueOf(json2)))
                 .andDo(print())
                 .andExpect((status().is(403)))
                 .andReturn();
@@ -212,8 +269,35 @@ class ProfileControllerTest {
     }
 
 
+
+    /**
+     * DELETE Profile Controller Tests
+     * with and without token
+     * @throws Exception
+     */
     @Test
-    public void postInfoWithoutToken() throws Exception{
+    public void deleteInfoWithToken() throws Exception{
+        Profile profile = new Profile(1,1, "sdfs", "email", 910000000, "ewefwe", "3810", "aveiro", 211111111, "photo");
+
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+
+        mockMvc.perform(delete("/profile/")
+                .header("Authorization", "Bearer " + accessToken))
+                .andDo(print())
+                .andExpect(status().is(200));
+
+        MvcResult mock = mockMvc.perform(delete("/profile/")
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(200))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+    @Test
+    public void deleteInfoWithoutToken() throws Exception{
         mockMvc.perform(delete("/profile/"))
                 .andDo(print())
                 .andExpect(status().is(403));
