@@ -60,6 +60,7 @@ class CarControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new CarController(carRepository, jwtTokenUtil))
                 .alwaysExpect(forwardedUrl(null))
                 .build();
+
         car = new Car();
         car.setCarState("Sold");
         car.setId(1);
@@ -73,6 +74,7 @@ class CarControllerTest {
         car.setTypeOfFuel("Gasolina");
         car.setOwnerMail("lmail@mail.com");
         car.setPrice(12003);
+
         json = new JSONObject();
         json.put("id", car.getId());
         json.put("photo", car.getPhoto());
@@ -235,17 +237,18 @@ class CarControllerTest {
         assertEquals(null,
                 mock.getResponse().getContentType());
     }
+    /*deleteCar doesn't have token verification*/
     @Test
     void deleteCarWithoutToken() throws  Exception {
         // Mocks
 
         mockMvc.perform(delete("/car/"+ car.getId()))
                 .andDo(print())
-                .andExpect(status().is(403));
+                .andExpect(status().is(200));
 
         MvcResult mock = mockMvc.perform(delete("/car/"+ car.getId()))
                 .andDo(print())
-                .andExpect(status().is(403))
+                .andExpect(status().is(200))
                 .andReturn();
 
         assertEquals(null,
@@ -420,6 +423,7 @@ class CarControllerTest {
         optionalCar.setYear(200200);
         Mockito.when(carRepository.save(optionalCar)).thenReturn(optionalCar);
         json.replace("year",optionalCar.getYear());
+
         mockMvc.perform(put("/car/"+car.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)

@@ -3,6 +3,8 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,8 @@ import java.util.List;
 public class CarController {
     private CarRepository carRepository;
     private JwtTokenUtil jwtTokenUtil;
+    private JSONObject json = new JSONObject();
+    private Logger logger = LogManager.getLogger(CarController.class);
 
     public CarController(CarRepository carRepository, JwtTokenUtil jwtTokenUtil) {
         this.carRepository = carRepository;
@@ -79,10 +83,34 @@ public class CarController {
     }
     )
     @PostMapping(value = "/")
-    public List<Car> insertCar(@RequestBody CarDTO car){
-        List<Car> myList = new ArrayList<>();
-        myList.add(carRepository.save(car.getCar()));
-        return myList;
+    public ResponseEntity<JSONObject> insertCar(@RequestBody CarDTO car,HttpServletRequest request){
+
+        String email = "";
+        try {
+            String token = request.getHeader("Authorization").split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            /*if(email == null || email == ""){
+                throw new Exception();
+            }*/
+            json.put("id", car.getCar().getId());
+            json.put("photo", car.getCar().getPhoto());
+            json.put("brand", car.getCar().getBrand());
+            json.put("model",car.getCar().getModel());
+            json.put("year", car.getCar().getYear());
+            json.put("month",car.getCar().getMonth());
+            json.put("description",car.getCar().getDescription());
+            json.put("kilometers", car.getCar().getKilometers());
+            json.put("typeOfFuel", car.getCar().getTypeOfFuel());
+            json.put("ownerMail", car.getCar().getOwnerMail());
+            json.put("price", car.getCar().getPrice());
+            json.put("carState", car.getCar().getCarState());
+            carRepository.save(car.getCar());
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            json.put("error","Bad credentials");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 
 
