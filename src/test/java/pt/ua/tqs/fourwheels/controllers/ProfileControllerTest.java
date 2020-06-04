@@ -21,8 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
-import pt.ua.tqs.fourwheels.models.ProfileModel;
-import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import static org.hamcrest.Matchers.hasKey;

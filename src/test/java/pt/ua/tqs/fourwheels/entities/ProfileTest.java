@@ -28,7 +28,7 @@ class ProfileTest {
     }
 
     @Test
-    public void constProfile() {
+    public void constProfilePartial() {
         Profile p = new Profile(1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
         assertEquals(1, p.getType());
         assertEquals("name", p.getName());
@@ -43,7 +43,7 @@ class ProfileTest {
     }
 
     @Test
-    public void ConstProfile2(){
+    public void constProfileFull(){
         Profile p = new Profile(1, 1, "name", "mail", 1, "address", "zipCode", "city", 1, "photo");
         assertEquals(1, p.getId());
         assertEquals(1, p.getType());
