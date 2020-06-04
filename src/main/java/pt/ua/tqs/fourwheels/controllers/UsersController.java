@@ -13,12 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-import springfox.documentation.spring.web.json.Json;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @RestController
 @RequestMapping("/users")
@@ -120,7 +117,4 @@ public class UsersController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
-
-
-
 }

@@ -3,9 +3,10 @@ package pt.ua.tqs.fourwheels.repositories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 import pt.ua.tqs.fourwheels.entities.Car;
 
-
+@Repository
 public interface CarRepository extends PagingAndSortingRepository<Car, Integer> {
     Page<Car> findCarsByBrandContainingAndCarStateEquals(String brand, String state, Pageable pageable);
     Page<Car> findCarsByModelContainingAndCarStateEquals(String model, String state, Pageable pageable);
@@ -15,5 +16,7 @@ public interface CarRepository extends PagingAndSortingRepository<Car, Integer> 
     Page<Car> findCarsByOwnerMail(String email, Pageable pageable);
     Page<Car> findCarsByCarStateEquals(String state, Pageable pageable);
     Page<Car> findCarsByOwnerMailEqualsAndAndCarStateEquals(String email, String sate, Pageable pageable);
+    
+    int countAllByCarStateEquals(String state);
 
 }
