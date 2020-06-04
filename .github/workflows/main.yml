@@ -32,8 +32,8 @@ jobs:
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
           MYSQL_ENDPOINT: ${{ secrets.MYSQL_ENDPOINT }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-          TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
-          TESTER_EMAIL: ${{ secrets.TESTER_EMAIL }}
+          TEST_TOKEN: ${{secrets.TEST_TOKEN }}
+          TESTER_EMAIL: ${{secrets.TESTER_EMAIL}}
           SPRING_PORT: ${{ secrets.SPRING_PORT }}
           SONAR: ${{ secrets.SONAR }}
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
