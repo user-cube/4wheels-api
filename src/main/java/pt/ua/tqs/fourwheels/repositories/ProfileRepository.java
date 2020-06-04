@@ -21,9 +21,9 @@ public interface ProfileRepository extends PagingAndSortingRepository<Profile, I
     @Query(value="select profile.name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail group by owner_mail", nativeQuery=true)
     List<Object> findByOwnerCarsRegistered();
 
-    @Query(value="select count(owner_mail), name from profile join car c on profile.mail = c.owner_mail where car_state='sold' group by owner_mail", nativeQuery=true)
+    @Query(value="select name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail where car_state='sold' group by owner_mail", nativeQuery=true)
     List<Object> findByOwnerCarsSold();
 
-    @Query(value="select count(owner_mail), name from profile join car c on profile.mail = c.owner_mail where car_state='selling' group by owner_mail", nativeQuery=true)
+    @Query(value="select name, count(owner_mail) from profile join car c on profile.mail = c.owner_mail where car_state='selling' group by owner_mail", nativeQuery=true)
     List<Object> findByOwnerCarsSelling();
 }
