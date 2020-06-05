@@ -3,6 +3,8 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +24,12 @@ import java.util.List;
 public class UsersController {
     private ProfileRepository profileRepository;
     private JwtTokenUtil jwtTokenUtil;
+    private Logger logger = LogManager.getLogger(AnalyticsController.class);
+    private JSONObject json = new JSONObject();
+    private String auth = "Authorization";
+    private String error = "error";
+    private String badCredentials = "Bad Credentials";
+    private String noAccess = "No Access";
 
     public UsersController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
@@ -38,23 +46,28 @@ public class UsersController {
     )
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile user = profileRepository.findByMail(email);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
+        json.clear();
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            Profile user = profileRepository.findByMail(email);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        if (user.getType() == 2) {
-            Page<Profile> userPage = profileRepository.findAll(pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> userOfPage = userPage.getContent();
+            if (user.getType() == 2) {
+                Page<Profile> userPage = profileRepository.findAll(pageAndLimit);
+                int totalPages = userPage.getTotalPages();
+                List<Profile> userOfPage = userPage.getContent();
 
-            JSONObject json = new JSONObject();
-            json.put("data", userOfPage);
-            json.put("totalpages", totalPages);
+                json.put("data", userOfPage);
+                json.put("totalpages", totalPages);
 
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return ResponseEntity.status(HttpStatus.OK).body(json);
+            } else {
+                return errorAccess();
+            }
+        } catch (Exception e){
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -68,23 +81,28 @@ public class UsersController {
     )
     @GetMapping(value = "/buyers")
     public ResponseEntity<JSONObject> getAllBuyers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile user = profileRepository.findByMail(email);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
+        json.clear();
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            Profile user = profileRepository.findByMail(email);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        if (user.getType() == 2) {
-            Page<Profile> userPage =  profileRepository.findAllByTypeEquals(0,pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> buyersPage = userPage.getContent();
+            if (user.getType() == 2) {
+                Page<Profile> userPage = profileRepository.findAllByTypeEquals(0, pageAndLimit);
+                int totalPages = userPage.getTotalPages();
+                List<Profile> buyersPage = userPage.getContent();
 
-            JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+                json.put("data", buyersPage);
+                json.put("totalpages", totalPages);
 
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return ResponseEntity.status(HttpStatus.OK).body(json);
+            } else {
+                return errorAccess();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -98,23 +116,39 @@ public class UsersController {
     )
     @GetMapping(value = "/vendors")
     public ResponseEntity<JSONObject> getAllVendors(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile user = profileRepository.findByMail(email);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
+        json.clear();
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            String email = jwtTokenUtil.getUsernameFromToken(token);
+            Profile user = profileRepository.findByMail(email);
+            Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        if (user.getType() == 2) {
-            Page<Profile> userPage =  profileRepository.findAllByTypeEquals(1,pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> buyersPage = userPage.getContent();
+            if (user.getType() == 2) {
+                Page<Profile> userPage = profileRepository.findAllByTypeEquals(1, pageAndLimit);
+                int totalPages = userPage.getTotalPages();
+                List<Profile> buyersPage = userPage.getContent();
 
-            JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+                json.put("data", buyersPage);
+                json.put("totalpages", totalPages);
 
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return ResponseEntity.status(HttpStatus.OK).body(json);
+            } else {
+                return errorAccess();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
+
+    private ResponseEntity<JSONObject> errorAccess() {
+        json.put(error, noAccess);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+
+    private ResponseEntity<JSONObject> errorCredentials() {
+        json.put(error, badCredentials);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+
 }

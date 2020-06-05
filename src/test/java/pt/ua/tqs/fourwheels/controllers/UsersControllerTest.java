@@ -50,6 +50,12 @@ public class UsersControllerTest {
                 .build();
     }
 
+    /**
+     * GET Users Controller Tests
+     * for /users/
+     * with token and access level
+     * @throws Exception
+     */
     @Test
     public void getAllUsersWithTokenAndAuthenticationOk() throws Exception {
         Profile profile = new Profile(1,2, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
@@ -65,7 +71,8 @@ public class UsersControllerTest {
 
         mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasKey("data")));
+                .andExpect(jsonPath("$", hasKey("data")))
+                .andExpect(jsonPath("$", hasKey("totalpages")));
 
         MvcResult mock = mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
@@ -75,4 +82,238 @@ public class UsersControllerTest {
                 mock.getResponse().getContentType());
     }
 
+    /**
+     * GET Users Controller Tests
+     * for /users/
+     * with token and without access level
+     * @throws Exception
+     */
+    @Test
+    public void getAllUsersWithTokenAndAuthenticationNotOk() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(profileRepository.findAll(PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/
+     * without token
+     * @throws Exception
+     */
+    @Test
+    public void getAllUsersWithoutToken() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findAll(PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/buyers
+     * with token and access level
+     * @throws Exception
+     */
+    @Test
+    public void getAllBuyerWithTokenAndAuthenticationOk() throws Exception {
+        Profile profile = new Profile(1,2, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(profileRepository.findAllByTypeEquals(0, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasKey("data")))
+                .andExpect(jsonPath("$", hasKey("totalpages")));
+
+        MvcResult mock = mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/buyers
+     * with token and without access level
+     * @throws Exception
+     */
+    @Test
+    public void getAllBuyersWithTokenAndAuthenticationNotOk() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(profileRepository.findAllByTypeEquals(0, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/buyers
+     * without token
+     * @throws Exception
+     */
+    @Test
+    public void getAllBuyersWithoutToken() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findAllByTypeEquals(0, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/buyers?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/vendors
+     * with token and access level
+     * @throws Exception
+     */
+    @Test
+    public void getAllVendorsWithTokenAndAuthenticationOk() throws Exception {
+        Profile profile = new Profile(1,2, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(profileRepository.findAllByTypeEquals(1, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasKey("data")))
+                .andExpect(jsonPath("$", hasKey("totalpages")));
+
+        MvcResult mock = mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/vendors
+     * with token and without access level
+     * @throws Exception
+     */
+    @Test
+    public void getAllVendorsWithTokenAndAuthenticationNotOk() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(profile));
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
+        Mockito.when(profileRepository.findByMail(email)).thenReturn(profile);
+        Mockito.when(profileRepository.findAllByTypeEquals(1, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
+
+    /**
+     * GET Users Controller Tests
+     * for /users/vendors
+     * without token
+     * @throws Exception
+     */
+    @Test
+    public void getAllVendorsWithoutToken() throws Exception {
+        Profile profile = new Profile(1,1, "sdfs", email, 910000000, "ewefwe", "3810", "aveiro", 211111111, "greatphoto");
+
+        List<Profile> profiles = new ArrayList<>();
+        profiles.add(profile);
+        Page<Profile> profilePage = new PageImpl<>(profiles.subList(0, 1), Pageable.unpaged(), profiles.size());
+        // Mocks
+        Mockito.when(profileRepository.findAllByTypeEquals(1, PageRequest.of(0,1))).thenReturn(profilePage);
+
+        mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken)).andDo(print())
+                .andExpect(status().is(403));
+
+        MvcResult mock = mockMvc.perform(get("/users/vendors?page=0&limit=1").header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().is(403))
+                .andReturn();
+
+        assertEquals("application/json",
+                mock.getResponse().getContentType());
+    }
 }
