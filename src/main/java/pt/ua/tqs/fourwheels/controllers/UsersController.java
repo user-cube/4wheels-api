@@ -48,28 +48,7 @@ public class UsersController {
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         json.clear();
-        try {
-            String token = request.getHeader(auth).split(" ")[1];
-            String email = jwtTokenUtil.getUsernameFromToken(token);
-            Profile user = profileRepository.findByMail(email);
-            Pageable pageAndLimit = PageRequest.of(page, limit);
-
-            if (user.getType() == 2) {
-                Page<Profile> userPage = profileRepository.findAll(pageAndLimit);
-                int totalPages = userPage.getTotalPages();
-                List<Profile> userOfPage = userPage.getContent();
-
-                json.put("data", userOfPage);
-                json.put(numPages, totalPages);
-
-                return ResponseEntity.status(HttpStatus.OK).body(json);
-            } else {
-                return errorAccess();
-            }
-        } catch (Exception e){
-            logger.error(e.toString());
-            return errorCredentials();
-        }
+        return jsonFrom(null, request, page, limit);
     }
 
     @ApiOperation(value = "List all the buyers/vendors registered on the platform given the type on the url.", response = Iterable.class)
@@ -83,20 +62,27 @@ public class UsersController {
     @GetMapping(value = "/{type}")
     public ResponseEntity<JSONObject> getAllUsersFromType(@PathVariable("type") int type, HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         json.clear();
+        return jsonFrom(type, request, page, limit);
+    }
+
+    public ResponseEntity<JSONObject> jsonFrom(Integer type, HttpServletRequest request, int page, int limit) {
         try {
             String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             Pageable pageAndLimit = PageRequest.of(page, limit);
+            Page<Profile> userPage;
 
             if (user.getType() == 2) {
-                Page<Profile> userPage = profileRepository.findAllByTypeEquals(type, pageAndLimit);
+                if (type != null) {
+                    userPage = profileRepository.findAllByTypeEquals(type, pageAndLimit);
+                } else {
+                    userPage = profileRepository.findAll(pageAndLimit);
+                }
                 int totalPages = userPage.getTotalPages();
-                List<Profile> buyersPage = userPage.getContent();
-
-                json.put("data", buyersPage);
+                List<Profile> userOfPage = userPage.getContent();
+                json.put("data", userOfPage);
                 json.put(numPages, totalPages);
-
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
                 return errorAccess();
