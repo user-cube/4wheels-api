@@ -24,7 +24,7 @@ import java.util.List;
 public class UsersController {
     private ProfileRepository profileRepository;
     private JwtTokenUtil jwtTokenUtil;
-    private Logger logger = LogManager.getLogger(AnalyticsController.class);
+    private Logger logger = LogManager.getLogger(UsersController.class);
     private JSONObject json = new JSONObject();
     private String auth = "Authorization";
     private String error = "error";
