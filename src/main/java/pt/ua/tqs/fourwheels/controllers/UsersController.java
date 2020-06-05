@@ -22,7 +22,9 @@ import java.util.List;
 public class UsersController {
     private ProfileRepository profileRepository;
     private JwtTokenUtil jwtTokenUtil;
-
+    private String authorization = "authorization";
+    private String totalpages = "totalpages";
+    
     public UsersController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
         this.jwtTokenUtil = jwtTokenUtil;
@@ -38,24 +40,7 @@ public class UsersController {
     )
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile user = profileRepository.findByMail(email);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
-
-        if (user.getType() == 2) {
-            Page<Profile> userPage = profileRepository.findAll(pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> userOfPage = userPage.getContent();
-
-            JSONObject json = new JSONObject();
-            json.put("data", userOfPage);
-            json.put("totalpages", totalPages);
-
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
+        return jsonFrom(request,page,limit,-1);
     }
 
     @ApiOperation(value = "List all the buyers registered on the platform.", response = Iterable.class)
@@ -68,24 +53,7 @@ public class UsersController {
     )
     @GetMapping(value = "/buyers")
     public ResponseEntity<JSONObject> getAllBuyers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Profile user = profileRepository.findByMail(email);
-        Pageable pageAndLimit = PageRequest.of(page, limit);
-
-        if (user.getType() == 2) {
-            Page<Profile> userPage =  profileRepository.findAllByTypeEquals(0,pageAndLimit);
-            int totalPages = userPage.getTotalPages();
-            List<Profile> buyersPage = userPage.getContent();
-
-            JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
-
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
+        return jsonFrom(request,page,limit,0);
     }
 
     @ApiOperation(value = "List all the vendors registered on the platform.", response = Iterable.class)
@@ -98,19 +66,26 @@ public class UsersController {
     )
     @GetMapping(value = "/vendors")
     public ResponseEntity<JSONObject> getAllVendors(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
+        return jsonFrom(request,page,limit,1);
+    }
+
+    private ResponseEntity<JSONObject> jsonFrom(HttpServletRequest request, int page, int limit,int type){
+        String token = request.getHeader(authorization).split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
         if (user.getType() == 2) {
-            Page<Profile> userPage =  profileRepository.findAllByTypeEquals(1,pageAndLimit);
+            Page<Profile> userPage =  profileRepository.findAllByTypeEquals(type,pageAndLimit);
+            if(type == -1){
+                userPage =  profileRepository.findAll(pageAndLimit);
+            }
             int totalPages = userPage.getTotalPages();
             List<Profile> buyersPage = userPage.getContent();
 
             JSONObject json = new JSONObject();
             json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+            json.put(totalpages, totalPages);
 
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
