@@ -22,6 +22,9 @@ import java.util.List;
 public class UsersController {
     private ProfileRepository profileRepository;
     private JwtTokenUtil jwtTokenUtil;
+    private String totalpages = "totalpages";
+    private String data = "data";
+    private String auth = "Authorization";
 
     public UsersController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
@@ -38,7 +41,7 @@ public class UsersController {
     )
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllUsers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
+        String token = request.getHeader(auth).split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
         Pageable pageAndLimit = PageRequest.of(page, limit);
@@ -49,8 +52,8 @@ public class UsersController {
             List<Profile> userOfPage = userPage.getContent();
 
             JSONObject json = new JSONObject();
-            json.put("data", userOfPage);
-            json.put("totalpages", totalPages);
+            json.put(data, userOfPage);
+            json.put(totalpages, totalPages);
 
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
@@ -68,7 +71,7 @@ public class UsersController {
     )
     @GetMapping(value = "/buyers")
     public ResponseEntity<JSONObject> getAllBuyers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
+        String token = request.getHeader(auth).split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
         Pageable pageAndLimit = PageRequest.of(page, limit);
@@ -79,8 +82,8 @@ public class UsersController {
             List<Profile> buyersPage = userPage.getContent();
 
             JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+            json.put(data, buyersPage);
+            json.put(totalpages, totalPages);
 
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
@@ -98,7 +101,7 @@ public class UsersController {
     )
     @GetMapping(value = "/vendors")
     public ResponseEntity<JSONObject> getAllVendors(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        String token = request.getHeader("Authorization").split(" ")[1];
+        String token = request.getHeader(auth).split(" ")[1];
         String email = jwtTokenUtil.getUsernameFromToken(token);
         Profile user = profileRepository.findByMail(email);
         Pageable pageAndLimit = PageRequest.of(page, limit);
@@ -109,8 +112,8 @@ public class UsersController {
             List<Profile> buyersPage = userPage.getContent();
 
             JSONObject json = new JSONObject();
-            json.put("data", buyersPage);
-            json.put("totalpages", totalPages);
+            json.put(data, buyersPage);
+            json.put(totalpages, totalPages);
 
             return ResponseEntity.status(HttpStatus.OK).body(json);
         } else {
