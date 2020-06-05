@@ -320,6 +320,4 @@ public class AnalyticsControllerTest {
                 mock.getResponse().getContentType());
     }
 
-
-
 }

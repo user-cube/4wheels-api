@@ -71,11 +71,11 @@ public class AnalyticsController {
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                json.put(error, noAccess);
+                errorAccess();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         }   catch (Exception e){
-            json.put(error, badCredentials);
+            errorCredentials();
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -110,11 +110,11 @@ public class AnalyticsController {
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                json.put(error, noAccess);
+                errorAccess();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         } catch (Exception e){
-            json.put(error, badCredentials);
+            errorCredentials();
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -148,11 +148,11 @@ public class AnalyticsController {
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                json.put(error, noAccess);
+                errorAccess();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         } catch (Exception e){
-            json.put(error, badCredentials);
+            errorCredentials();
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
@@ -186,13 +186,21 @@ public class AnalyticsController {
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                json.put(error, noAccess);
+                errorAccess();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         } catch (Exception e){
-            json.put(error, badCredentials);
+            errorCredentials();
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
+    }
+
+    public void errorAccess() {
+        json.put(error, noAccess);
+    }
+
+    public void errorCredentials() {
+        json.put(error, badCredentials);
     }
 }
