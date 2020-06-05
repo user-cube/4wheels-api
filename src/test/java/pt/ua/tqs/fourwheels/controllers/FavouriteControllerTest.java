@@ -23,9 +23,13 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -111,7 +115,6 @@ public class FavouriteControllerTest {
         List<Favourite> favouriteList = new ArrayList();
         favouriteList.add(fav);
         favouriteList.add(favourite);
-        JSONObject json1 = new JSONObject();
         JSONObject json2 = new JSONObject();
 
         json2.put("favourites", favouriteList);
@@ -146,7 +149,6 @@ public class FavouriteControllerTest {
         List<Favourite> favouriteList = new ArrayList();
         favouriteList.add(fav);
         favouriteList.add(favourite);
-        JSONObject json1 = new JSONObject();
         JSONObject json2 = new JSONObject();
 
         json2.put("favourites", favouriteList);
@@ -183,7 +185,6 @@ public class FavouriteControllerTest {
         List<Favourite> favouriteList = new ArrayList();
         favouriteList.add(fav);
         favouriteList.add(favourite);
-        JSONObject json1 = new JSONObject();
         JSONObject json2 = new JSONObject();
 
         json2.put("favourites", favouriteList);
@@ -218,7 +219,6 @@ public class FavouriteControllerTest {
         List<Favourite> favouriteList = new ArrayList();
         favouriteList.add(fav);
         favouriteList.add(favourite);
-        JSONObject json1 = new JSONObject();
         JSONObject json2 = new JSONObject();
 
         json2.put("favourites", favouriteList);
