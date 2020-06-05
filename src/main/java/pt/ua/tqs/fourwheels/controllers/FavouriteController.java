@@ -3,19 +3,31 @@ package pt.ua.tqs.fourwheels.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Favourite;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/favourite")
 public class FavouriteController {
     private FavouriteRepository favouriteRepository;
     private JwtTokenUtil jwtTokenUtil;
+
+    private JSONObject json = new JSONObject();
+    private Logger logger = LogManager.getLogger(FavouriteController.class);
+
+    private String auth = "Authorization";
+    private String error = "error";
+    private String bdCred = "Bad Credentials!";
+
 
     public FavouriteController(FavouriteRepository favouriteRepository, JwtTokenUtil jwtTokenUtil) {
         this.favouriteRepository = favouriteRepository;
@@ -31,10 +43,18 @@ public class FavouriteController {
     }
     )
     @GetMapping(value = "/")
-    public List<Favourite> getFavourites(HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        return favouriteRepository.findAllByMail(email);
+    public ResponseEntity<JSONObject> getFavourites(HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            json.put("data", favouriteRepository.findAllByMail(email));
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
     
     @ApiOperation(value = "Delete favourite car by user.", response = Iterable.class)
@@ -46,10 +66,19 @@ public class FavouriteController {
     }
     )
     @DeleteMapping(value = "/{id}")
-    public void deleteFavourite(@PathVariable("id") int id, HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
+    public ResponseEntity<JSONObject> deleteFavourite(@PathVariable("id") int id, HttpServletRequest request){
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
         favouriteRepository.deleteByCarEqualsAndMailEquals(id, email);
+        json.put("msg", "Successfully Deleted!");
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
     @ApiOperation(value = "Save a car in the user favourites list.", response = Iterable.class)
@@ -61,12 +90,22 @@ public class FavouriteController {
     }
     )
     @PostMapping(value = "/{id}")
-    public void addFavourite(@PathVariable("id") int id, HttpServletRequest request){
-        String token = request.getHeader("Authorization").split(" ")[1];
-        String email = jwtTokenUtil.getUsernameFromToken(token);
-        Favourite newFav = new Favourite();
-        newFav.setCar(id);
-        newFav.setMail(email);
-        favouriteRepository.save(newFav);
+    public ResponseEntity<JSONObject> addFavourite(@PathVariable("id") int id, HttpServletRequest request){
+
+        String email = "";
+        try {
+            String token = request.getHeader(auth).split(" ")[1];
+            email = jwtTokenUtil.getUsernameFromToken(token);
+            Favourite newFav = new Favourite();
+            newFav.setCar(id);
+            newFav.setMail(email);
+            json.put("data", newFav);
+            favouriteRepository.save(newFav);
+            return ResponseEntity.status(HttpStatus.OK).body(json);
+        }catch (Exception e){
+            logger.error(e.toString());
+            json.put(error, bdCred);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+        }
     }
 }
