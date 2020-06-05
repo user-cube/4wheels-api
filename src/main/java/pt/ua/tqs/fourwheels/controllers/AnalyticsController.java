@@ -71,13 +71,10 @@ public class AnalyticsController {
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                errorAccess();
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+                return errorAccess();
             }
         }   catch (Exception e){
-            errorCredentials();
-            logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials(e);
         }
     }
 
@@ -106,17 +103,12 @@ public class AnalyticsController {
                     amountOfCarsRegisteredByUser = profileRepository.findByOwnerCarsRegistered();
                 }
 
-                json.put("data", amountOfCarsRegisteredByUser);
-
-                return ResponseEntity.status(HttpStatus.OK).body(json);
+                return jsonFrom(amountOfCarsRegisteredByUser);
             } else {
-                errorAccess();
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+                return errorAccess();
             }
         } catch (Exception e){
-            errorCredentials();
-            logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials(e);
         }
     }
 
@@ -144,17 +136,12 @@ public class AnalyticsController {
                     amountOfCarsSoldByUser =  profileRepository.findByOwnerCarsSold();
                 }
 
-                json.put("data", amountOfCarsSoldByUser);
-
-                return ResponseEntity.status(HttpStatus.OK).body(json);
+                return jsonFrom(amountOfCarsSoldByUser);
             } else {
-                errorAccess();
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+                return errorAccess();
             }
         } catch (Exception e){
-            errorCredentials();
-            logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials(e);
         }
     }
 
@@ -181,26 +168,28 @@ public class AnalyticsController {
                 } else {
                     amountOfCarsOnSaleByUser =  profileRepository.findByOwnerCarsSelling();
                 }
-
-                json.put("data", amountOfCarsOnSaleByUser);
-
-                return ResponseEntity.status(HttpStatus.OK).body(json);
+                return jsonFrom(amountOfCarsOnSaleByUser);
             } else {
-                errorAccess();
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+                return errorAccess();
             }
         } catch (Exception e){
-            errorCredentials();
-            logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials(e);
         }
     }
 
-    public void errorAccess() {
+    private ResponseEntity<JSONObject> errorAccess() {
         json.put(error, noAccess);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
     }
 
-    public void errorCredentials() {
+    private ResponseEntity<JSONObject> errorCredentials(Exception e) {
         json.put(error, badCredentials);
+        logger.error(e.toString());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+
+    private ResponseEntity<JSONObject> jsonFrom(List<Object> list){
+        json.put("data", list);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }
