@@ -100,7 +100,7 @@ public class AnalyticsController {
             List<Object> amountOfCarsRegisteredByUser;
 
             if (user.getType() == 2) {
-                if (!nullLimit(limit)) {
+                if (limit != null) {
                     amountOfCarsRegisteredByUser = profileRepository.findByOwnerCarsRegisteredLimited(limit);
                 } else {
                     amountOfCarsRegisteredByUser = profileRepository.findByOwnerCarsRegistered();
@@ -138,7 +138,7 @@ public class AnalyticsController {
             List<Object> amountOfCarsSoldByUser;
 
             if (user.getType() == 2) {
-                if (!nullLimit(limit)) {
+                if (limit != null) {
                     amountOfCarsSoldByUser =  profileRepository.findByOwnerCarsSoldLimited(limit);
                 } else {
                     amountOfCarsSoldByUser =  profileRepository.findByOwnerCarsSold();
@@ -176,7 +176,7 @@ public class AnalyticsController {
             List<Object> amountOfCarsOnSaleByUser;
 
             if (user.getType() == 2) {
-                if (!nullLimit(limit)) {
+                if (limit != null) {
                     amountOfCarsOnSaleByUser =  profileRepository.findByOwnerCarsSellingLimited(limit);
                 } else {
                     amountOfCarsOnSaleByUser =  profileRepository.findByOwnerCarsSelling();
@@ -194,9 +194,5 @@ public class AnalyticsController {
             logger.error(e.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
-    }
-
-    public boolean nullLimit(Integer limit) {
-        return (limit == null);
     }
 }
