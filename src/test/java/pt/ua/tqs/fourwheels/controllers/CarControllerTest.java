@@ -632,7 +632,7 @@ class CarControllerTest {
     void markCarAsSoldWithInvalidToken()  throws Exception {
         Car updateCar = car;
         // Mocks
-        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
+        Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(null);
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
         updateCar.setCarState("sold");
         Mockito.when(carRepository.save(updateCar)).thenReturn(updateCar);

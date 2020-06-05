@@ -413,31 +413,7 @@ public class CarController {
     )
     @GetMapping(value = "/vendor/selling")
     public ResponseEntity<JSONObject> getAllCarsOnSaleFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-
-        String email = "";
-        try {
-            String token = request.getHeader("Authorization").split(" ")[1];
-            email = jwtTokenUtil.getUsernameFromToken(token);
-            if(checkMail(email)) {
-                json.put(errorKey,errorMsg);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
-            }
-
-            Pageable pageAndLimit = PageRequest.of(page, limit);
-
-            Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "selling", pageAndLimit);
-            int totalPages = carPage.getTotalPages();
-            List<Car> cars = carPage.getContent();
-
-            json.clear();
-            json.put("data", cars);
-            json.put("totalpages", totalPages);
-            return ResponseEntity.status(HttpStatus.OK).body(json);
-        }catch (Exception e){
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
-        }
+        return getAllCarsSoldOrSellingFromVendorFrame(request,page,limit,"selling");
     }
 
     /**
@@ -454,7 +430,10 @@ public class CarController {
     )
     @GetMapping(value = "/vendor/sold")
     public ResponseEntity<JSONObject> getAllCarsSoldFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-
+        return getAllCarsSoldOrSellingFromVendorFrame(request,page,limit,"sold");
+    }
+    private boolean checkMail(String email){return email == null || email.equals("");}
+    private ResponseEntity<JSONObject> getAllCarsSoldOrSellingFromVendorFrame(HttpServletRequest request, int page, int limit,String carState){
         String email = "";
         try {
             String token = request.getHeader("Authorization").split(" ")[1];
@@ -466,7 +445,7 @@ public class CarController {
 
             Pageable pageAndLimit = PageRequest.of(page, limit);
 
-            Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, "sold", pageAndLimit);
+            Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, carState, pageAndLimit);
             int totalPages = carPage.getTotalPages();
             List<Car> cars = carPage.getContent();
 
@@ -480,5 +459,4 @@ public class CarController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
-    private boolean checkMail(String email){return email == null || email.equals("");}
 }
