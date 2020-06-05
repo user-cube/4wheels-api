@@ -119,9 +119,7 @@ public class CarController {
             carRepository.save(car.getCar());
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
     }
 
@@ -148,9 +146,7 @@ public class CarController {
             json.put("msg","Successfully deleted");
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e) {
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
     }
 
@@ -297,9 +293,7 @@ public class CarController {
             carRepository.save(optionalCar);
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
     }
 
@@ -351,9 +345,7 @@ public class CarController {
             json.put(carState, updateCar.getCarState());
             return ResponseEntity.status(HttpStatus.OK).body(json);
         }catch (Exception e){
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
     }
 
@@ -385,17 +377,9 @@ public class CarController {
             Pageable pageAndLimit = PageRequest.of(page, limit);
 
             Page<Car> carPage =  carRepository.findCarsByOwnerMail(email, pageAndLimit);
-            int totalPages = carPage.getTotalPages();
-            List<Car> cars = carPage.getContent();
-
-            json.clear();
-            json.put("data", cars);
-            json.put("totalpages", totalPages);
-            return ResponseEntity.status(HttpStatus.OK).body(json);
+            return jsonFromCarsList(carPage);
         }catch (Exception e){
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
     }
 
@@ -446,17 +430,22 @@ public class CarController {
             Pageable pageAndLimit = PageRequest.of(page, limit);
 
             Page<Car> carPage =  carRepository.findCarsByOwnerMailEqualsAndAndCarStateEquals(email, carState, pageAndLimit);
-            int totalPages = carPage.getTotalPages();
-            List<Car> cars = carPage.getContent();
-
-            json.clear();
-            json.put("data", cars);
-            json.put("totalpages", totalPages);
-            return ResponseEntity.status(HttpStatus.OK).body(json);
+            return jsonFromCarsList(carPage);
         }catch (Exception e){
-            logger.error(e.toString());
-            json.put(errorKey,errorMsg);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return catchResult(e);
         }
+    }
+    private ResponseEntity<JSONObject> catchResult(Exception e){
+        logger.error(e.toString());
+        json.put(errorKey,errorMsg);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+    private ResponseEntity<JSONObject> jsonFromCarsList(Page carPage){
+        int totalPages = carPage.getTotalPages();
+        List<Car> cars = carPage.getContent();
+        json.clear();
+        json.put("data", cars);
+        json.put("totalpages", totalPages);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }
