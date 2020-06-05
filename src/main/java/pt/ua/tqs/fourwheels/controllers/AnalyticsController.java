@@ -180,7 +180,6 @@ public class AnalyticsController {
             return errorCredentials();
         }
     }
-
     private ResponseEntity<JSONObject> errorAccess() {
         json.put(error, noAccess);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);

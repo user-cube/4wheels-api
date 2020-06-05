@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 @WebMvcTest(value = ProfileRepositoryTest.class)
 class ProfileRepositoryTest {
     @Test
-    private void injectedComponentAreNotNullTest() {
+    public void injectedComponentAreNotNullTest() {
         assertNotEquals(0, 1);
     }
 }
