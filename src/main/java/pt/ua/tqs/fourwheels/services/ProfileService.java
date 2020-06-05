@@ -19,6 +19,12 @@ public class ProfileService {
 
     @Transactional
     public Profile getUserById(int id){
-        return userRepository.findById(id).get();
+        try{
+            return userRepository.findById(id).get();
+        }catch(Exception e){
+            Profile nullPf = new Profile();
+            nullPf.setName("null");
+            return nullPf;
+        }
     }
 }
