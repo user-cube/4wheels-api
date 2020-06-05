@@ -74,7 +74,8 @@ public class AnalyticsController {
                 return errorAccess();
             }
         }   catch (Exception e){
-            return errorCredentials(e);
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -108,7 +109,8 @@ public class AnalyticsController {
                 return errorAccess();
             }
         } catch (Exception e){
-            return errorCredentials(e);
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -141,7 +143,8 @@ public class AnalyticsController {
                 return errorAccess();
             }
         } catch (Exception e){
-            return errorCredentials(e);
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -173,7 +176,8 @@ public class AnalyticsController {
                 return errorAccess();
             }
         } catch (Exception e){
-            return errorCredentials(e);
+            logger.error(e.toString());
+            return errorCredentials();
         }
     }
 
@@ -182,9 +186,8 @@ public class AnalyticsController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
     }
 
-    private ResponseEntity<JSONObject> errorCredentials(Exception e) {
+    private ResponseEntity<JSONObject> errorCredentials() {
         json.put(error, badCredentials);
-        logger.error(e.toString());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
     }
 
