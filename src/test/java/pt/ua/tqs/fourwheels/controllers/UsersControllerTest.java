@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-@WebMvcTest(value = AnalyticsController.class)
+@WebMvcTest(value = UsersController.class)
 public class UsersControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -49,8 +49,6 @@ public class UsersControllerTest {
                 .alwaysExpect(forwardedUrl(null))
                 .build();
     }
-
-
 
     @Test
     public void getAllUsersWithTokenAndAuthenticationOk() throws Exception {
