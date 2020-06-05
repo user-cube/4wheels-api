@@ -85,22 +85,14 @@ public class UsersController {
                 json.put(numPages, totalPages);
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                return errorAccess();
+                json.put(error, noAccess);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         } catch (Exception e) {
-            logger.error(e.toString());
-            return errorCredentials();
+            json.put(error, badCredentials);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
 
-    private ResponseEntity<JSONObject> errorAccess() {
-        json.put(error, noAccess);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
-    }
-
-    private ResponseEntity<JSONObject> errorCredentials() {
-        json.put(error, badCredentials);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
-    }
 
 }
