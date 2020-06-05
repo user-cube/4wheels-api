@@ -72,16 +72,16 @@ public class UsersController {
         }
     }
 
-    @ApiOperation(value = "List all the buyers registered on the platform.", response = Iterable.class)
+    @ApiOperation(value = "List all the buyers/vendors registered on the platform given the type on the url.", response = Iterable.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all buyers."),
+            @ApiResponse(code = 200, message = "Successfully retrieved all buyers/vendors."),
             @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
             @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     }
     )
-    @GetMapping(value = "/buyers")
-    public ResponseEntity<JSONObject> getAllBuyers(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
+    @GetMapping(value = "/{type}")
+    public ResponseEntity<JSONObject> getAllUsersFromType(@PathVariable("type") int type, HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         json.clear();
         try {
             String token = request.getHeader(auth).split(" ")[1];
@@ -90,42 +90,7 @@ public class UsersController {
             Pageable pageAndLimit = PageRequest.of(page, limit);
 
             if (user.getType() == 2) {
-                Page<Profile> userPage = profileRepository.findAllByTypeEquals(0, pageAndLimit);
-                int totalPages = userPage.getTotalPages();
-                List<Profile> buyersPage = userPage.getContent();
-
-                json.put("data", buyersPage);
-                json.put(numPages, totalPages);
-
-                return ResponseEntity.status(HttpStatus.OK).body(json);
-            } else {
-                return errorAccess();
-            }
-        } catch (Exception e) {
-            logger.error(e.toString());
-            return errorCredentials();
-        }
-    }
-
-    @ApiOperation(value = "List all the vendors registered on the platform.", response = Iterable.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully retrieved all buyers."),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    }
-    )
-    @GetMapping(value = "/vendors")
-    public ResponseEntity<JSONObject> getAllVendors(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        json.clear();
-        try {
-            String token = request.getHeader(auth).split(" ")[1];
-            String email = jwtTokenUtil.getUsernameFromToken(token);
-            Profile user = profileRepository.findByMail(email);
-            Pageable pageAndLimit = PageRequest.of(page, limit);
-
-            if (user.getType() == 2) {
-                Page<Profile> userPage = profileRepository.findAllByTypeEquals(1, pageAndLimit);
+                Page<Profile> userPage = profileRepository.findAllByTypeEquals(type, pageAndLimit);
                 int totalPages = userPage.getTotalPages();
                 List<Profile> buyersPage = userPage.getContent();
 
