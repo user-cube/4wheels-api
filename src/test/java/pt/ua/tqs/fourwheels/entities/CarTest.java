@@ -30,133 +30,133 @@ class CarTest {
     }
 
     @Test
-    void getCarState() {
+    public void getCarState() {
         assertEquals("sold",get.getCarState());
     }
 
     @Test
-    void setCarState() {
+    public void setCarState() {
         set.setCarState("selling");
         assertEquals("selling", set.getCarState());
     }
 
     @Test
-    void getId() {
+    public void getId() {
         assertEquals(true, get.getId() >= 0);
     }
 
     @Test
-    void setId() {
+    public void setId() {
         set.setId(2);
         assertEquals(true,set.getId() == 2);
     }
 
     @Test
-    void getPhoto() {
+    public void getPhoto() {
         assertEquals("IMAGEMFANTAASTICA",get.getPhoto());
     }
 
     @Test
-    void setPhoto() {
+    public void setPhoto() {
         set.setPhoto("image2.0");
         assertEquals("image2.0",set.getPhoto());
     }
 
     @Test
-    void getBrand() {
+    public void getBrand() {
         assertEquals("Mazda",get.getBrand());
     }
 
     @Test
-    void setBrand() {
+    public void setBrand() {
         set.setBrand("Audi");
         assertEquals("Audi",set.getBrand());
     }
 
     @Test
-    void getModel() {
+    public void getModel() {
         assertEquals("555",get.getModel());
     }
 
     @Test
-    void setModel() {
+    public void setModel() {
         set.setModel("CX777");
         assertEquals("CX777",set.getModel());
     }
 
     @Test
-    void getYear() {
+    public void getYear() {
         assertEquals(1999,get.getYear());
     }
 
     @Test
-    void setYear() {
+    public void setYear() {
         set.setYear(20200);
         assertEquals(20200, set.getYear());
     }
 
     @Test
-    void getMonth() {
+    public void getMonth() {
         assertEquals(5,get.getMonth());
     }
 
     @Test
-    void setMonth() {
+    public void setMonth() {
         set.setMonth(5);
         assertEquals(5,set.getMonth());
     }
 
     @Test
-    void getDescription() {
+    public void getDescription() {
         assertEquals("EUSOU Lesias",get.getDescription());
     }
 
     @Test
-    void setDescription() {
+    public void setDescription() {
         set.setDescription("Hello please buy my car!");
         assertEquals("Hello please buy my car!",set.getDescription());
     }
 
     @Test
-    void getKilometers() {
+    public void getKilometers() {
         assertEquals(9412,get.getKilometers());
     }
 
     @Test
-    void setKilometers() {
+    public void setKilometers() {
         set.setKilometers(999999999);
         assertEquals(999999999,set.getKilometers());
     }
 
     @Test
-    void getTypeOfFuel() {
+    public void getTypeOfFuel() {
         assertEquals("Gasolina",get.getTypeOfFuel());
     }
 
     @Test
-    void setTypeOfFuel() {
+    public void setTypeOfFuel() {
         set.setTypeOfFuel("Electric");
         assertEquals("Electric",set.getTypeOfFuel());
     }
 
     @Test
-    void getOwnerMail() {
+    public void getOwnerMail() {
         assertEquals("BestMail@EU.pt",get.getOwnerMail());
     }
 
     @Test
-    void setOwnerMail() {
+    public void setOwnerMail() {
         set.setOwnerMail("MyMail@mail.ua.pt");
         assertEquals("MyMail@mail.ua.pt",set.getOwnerMail());
     }
 
     @Test
-    void getPrice() {
+    public void getPrice() {
         assertEquals(12003,get.getPrice(),10);
     }
 
     @Test
-    void setPrice() {
+    public void setPrice() {
         set.setPrice(999999999);
         assertEquals(999999999,set.getPrice(),10);
     }

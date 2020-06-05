@@ -46,12 +46,12 @@ class CarControllerTest {
     private CarRepository carRepository;
     @MockBean
     private JwtTokenUtil jwtTokenUtil;
-    String accessToken = System.getenv("TEST_TOKEN");
-    String email = System.getenv("TESTER_EMAIL");
+    private String accessToken = System.getenv("TEST_TOKEN");
+    private String email = System.getenv("TESTER_EMAIL");
 
 
     private Car car;
-    JSONObject json;
+    private JSONObject json;
     @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new CarController(carRepository, jwtTokenUtil))
@@ -90,7 +90,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getCarInfoWithToken() throws Exception {
+    public void getCarInfoWithToken() throws Exception {
         // Mocks
         Mockito.when(carRepository.findById(1)).thenReturn(java.util.Optional.ofNullable(car));
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
@@ -127,7 +127,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsWithToken() throws Exception {
+    public void getAllCarsWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -148,7 +148,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsWithoutToken() throws Exception {
+    public void getAllCarsWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -168,7 +168,7 @@ class CarControllerTest {
     }
 
     @Test
-    void insertCarWithToken()  throws Exception {
+    public void insertCarWithToken()  throws Exception {
         // Mocks
         Mockito.when(carRepository.save(car)).thenReturn(car);
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
@@ -197,7 +197,7 @@ class CarControllerTest {
     }
 
     @Test
-    void insertCarWithWrongToken()  throws Exception {
+    public void insertCarWithWrongToken()  throws Exception {
         // Mocks
         Mockito.when(carRepository.save(car)).thenReturn(car);
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
@@ -226,7 +226,7 @@ class CarControllerTest {
     }
 
     @Test
-    void insertCarWithoutToken()  throws Exception {
+    public void insertCarWithoutToken()  throws Exception {
         // Mocks
         mockMvc.perform(post("/car/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -250,7 +250,7 @@ class CarControllerTest {
     }
 
     @Test
-    void deleteCarWithToken() throws  Exception {
+    public void deleteCarWithToken() throws  Exception {
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
 
@@ -270,7 +270,7 @@ class CarControllerTest {
     }
 
     @Test
-    void deleteCarWithInvalidToken() throws  Exception {
+    public void deleteCarWithInvalidToken() throws  Exception {
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
 
@@ -290,7 +290,7 @@ class CarControllerTest {
     }
 
     @Test
-    void deleteCarWithoutToken() throws  Exception {
+    public void deleteCarWithoutToken() throws  Exception {
         // Mocks
 
         mockMvc.perform(delete("/car/"+ car.getId()))
@@ -307,7 +307,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByBrandWithToken() throws Exception {
+    public void searchByBrandWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -328,7 +328,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByBrandWithoutToken() throws Exception {
+    public void searchByBrandWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -348,7 +348,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByModelWithToken() throws Exception {
+    public void searchByModelWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -369,7 +369,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByModelWithoutToken() throws Exception {
+    public void searchByModelWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -389,7 +389,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByYearWithToken() throws Exception {
+    public void searchByYearWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -410,7 +410,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByYearWithoutToken() throws Exception {
+    public void searchByYearWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -430,7 +430,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByFuelTypeWithToken() throws Exception {
+    public void searchByFuelTypeWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -451,7 +451,7 @@ class CarControllerTest {
     }
 
     @Test
-    void searchByFuelTypeWithoutToken() throws Exception {
+    public void searchByFuelTypeWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -471,7 +471,7 @@ class CarControllerTest {
     }
 
     @Test
-    void editCarInfoWithToken()  throws Exception {
+    public void editCarInfoWithToken()  throws Exception {
         Car optionalCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
@@ -504,7 +504,7 @@ class CarControllerTest {
     }
 
     @Test
-    void editCarInfoWithInvalidToken()  throws Exception {
+    public void editCarInfoWithInvalidToken()  throws Exception {
         Car optionalCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("");
@@ -537,7 +537,7 @@ class CarControllerTest {
     }
 
     @Test
-    void editCarInfoWithWrongToken()  throws Exception {
+    public void editCarInfoWithWrongToken()  throws Exception {
         Car optionalCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("mailinvalido@mail.com");
@@ -570,7 +570,7 @@ class CarControllerTest {
     }
 
     @Test
-    void editCarInfoWithoutToken()  throws Exception {
+    public void editCarInfoWithoutToken()  throws Exception {
         Car optionalCar = car;
         // Mocks
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
@@ -600,7 +600,7 @@ class CarControllerTest {
     }
 
     @Test
-    void markCarAsSoldWithToken()  throws Exception {
+    public void markCarAsSoldWithToken()  throws Exception {
         Car updateCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(email);
@@ -626,7 +626,7 @@ class CarControllerTest {
     }
 
     @Test
-    void markCarAsSoldWithInvalidToken()  throws Exception {
+    public void markCarAsSoldWithInvalidToken()  throws Exception {
         Car updateCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn(null);
@@ -652,7 +652,7 @@ class CarControllerTest {
     }
 
     @Test
-    void markCarAsSoldWithWrongToken()  throws Exception {
+    public void markCarAsSoldWithWrongToken()  throws Exception {
         Car updateCar = car;
         // Mocks
         Mockito.when(jwtTokenUtil.getUsernameFromToken(accessToken)).thenReturn("mailInvalido@mail.com");
@@ -678,7 +678,7 @@ class CarControllerTest {
     }
 
     @Test
-    void markCarAsSoldWithoutToken()  throws Exception {
+    public void markCarAsSoldWithoutToken()  throws Exception {
         Car updateCar = car;
         // Mocks
         Mockito.when(carRepository.findCarsById(car.getId())).thenReturn(car);
@@ -700,7 +700,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsFromVendorWithToken() throws Exception {
+    public void getAllCarsFromVendorWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -721,7 +721,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsFromVendorWithInvalidToken() throws Exception {
+    public void getAllCarsFromVendorWithInvalidToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -741,7 +741,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsFromVendorWithoutToken() throws Exception {
+    public void getAllCarsFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -761,7 +761,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsOnSaleFromVendorWithToken() throws Exception {
+    public void getAllCarsOnSaleFromVendorWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -782,7 +782,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsOnSaleFromVendorWithInvalidToken() throws Exception {
+    public void getAllCarsOnSaleFromVendorWithInvalidToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -802,7 +802,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsOnSaleFromVendorWithoutToken() throws Exception {
+    public void getAllCarsOnSaleFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         cars.add(car);
         Page<Car> carPage = new PageImpl<Car>(cars.subList(0,1),Pageable.unpaged(),cars.size());
@@ -822,7 +822,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsSoldFromVendorWithToken() throws Exception {
+    public void getAllCarsSoldFromVendorWithToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         car.setCarState("sold");
         cars.add(car);
@@ -844,7 +844,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsSoldFromVendorWithInvalidToken() throws Exception {
+    public void getAllCarsSoldFromVendorWithInvalidToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         car.setCarState("sold");
         cars.add(car);
@@ -865,7 +865,7 @@ class CarControllerTest {
     }
 
     @Test
-    void getAllCarsSoldFromVendorWithoutToken() throws Exception {
+    public void getAllCarsSoldFromVendorWithoutToken() throws Exception {
         List<Car> cars = new ArrayList<>();
         car.setCarState("sold");
         cars.add(car);
