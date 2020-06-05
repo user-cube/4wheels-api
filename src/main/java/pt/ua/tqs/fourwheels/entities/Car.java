@@ -12,10 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
 @Entity
 public class Car {
     @Id
