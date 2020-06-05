@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Car;
-import pt.ua.tqs.fourwheels.repositories.Authentication;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 
 import java.util.ArrayList;
@@ -27,9 +26,14 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(value = CarController.class)
@@ -42,8 +46,6 @@ class CarControllerTest {
     private CarRepository carRepository;
     @MockBean
     private JwtTokenUtil jwtTokenUtil;
-    @MockBean
-    private Authentication authentication;
     String accessToken = System.getenv("TEST_TOKEN");
     String email = System.getenv("TESTER_EMAIL");
 
