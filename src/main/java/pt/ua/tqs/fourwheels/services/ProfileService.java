@@ -22,7 +22,9 @@ public class ProfileService {
         try{
             return userRepository.findById(id).get();
         }catch(Exception e){
-            return new Profile();
+            Profile nullPf = new Profile();
+            nullPf.setName("null");
+            return nullPf;
         }
     }
 }
