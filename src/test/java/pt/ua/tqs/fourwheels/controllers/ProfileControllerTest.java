@@ -78,6 +78,7 @@ class ProfileControllerTest {
                 mock.getResponse().getContentType());
 
     }
+
     @Test
     public void getInfoWithoutToken() throws Exception{
         mockMvc.perform(get("/profile/")).andDo(print())
