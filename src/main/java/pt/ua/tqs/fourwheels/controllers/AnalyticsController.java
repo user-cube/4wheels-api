@@ -26,8 +26,12 @@ public class AnalyticsController {
     private ProfileRepository profileRepository;
     private CarRepository carRepository;
     private JwtTokenUtil jwtTokenUtil;
-    private Logger logger = LogManager.getLogger(ProfileController.class);
+    private Logger logger = LogManager.getLogger(AnalyticsController.class);
     private JSONObject json = new JSONObject();
+    private String auth = "Authorization";
+    private String error = "error";
+    private String badCredentials = "Bad Credentials";
+    private String noAccess = "No Access";
 
     public AnalyticsController(ProfileRepository profileRepository, CarRepository carRepository , JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
@@ -45,32 +49,33 @@ public class AnalyticsController {
     )
     @GetMapping(value = "/")
     public ResponseEntity<JSONObject> getAllAnalytics(HttpServletRequest request){
+        json.clear();
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             if (user.getType() == 2) {
                 long totalCars = carRepository.count();
                 int totalVendors = profileRepository.countAllByTypeEquals(1);
                 int totalAnalysts = profileRepository.countAllByTypeEquals(2);
+                int totalBuyers = profileRepository.countAllByTypeEquals(0);
                 int totalCarsOnSale = carRepository.countAllByCarStateEquals("selling");
                 int totalCarsSold = carRepository.countAllByCarStateEquals("sold");
 
-                JSONObject njson = new JSONObject();
-                njson.put("total_cars", totalCars);
-                njson.put("total_vendors", totalVendors);
-                njson.put("total_analysts", totalAnalysts);
-                njson.put("total_cars_selling", totalCarsOnSale);
-                njson.put("total_cars_sold", totalCarsSold);
+                json.put("total_cars", totalCars);
+                json.put("total_vendors", totalVendors);
+                json.put("total_buyers", totalBuyers);
+                json.put("total_analysts", totalAnalysts);
+                json.put("total_cars_selling", totalCarsOnSale);
+                json.put("total_cars_sold", totalCarsSold);
 
-                return ResponseEntity.status(HttpStatus.OK).body(njson);
+                return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return errorAccess();
             }
         }   catch (Exception e){
-            json.put("error", "Bad credentials");
             logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials();
         }
     }
 
@@ -85,8 +90,9 @@ public class AnalyticsController {
     )
     @GetMapping(value = "/vendors/cars/registered")
     public ResponseEntity<JSONObject> getNumberOfCarsRegisteredByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
+        json.clear();
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsRegisteredByUser;
@@ -97,17 +103,14 @@ public class AnalyticsController {
                 } else {
                     amountOfCarsRegisteredByUser = profileRepository.findByOwnerCarsRegistered();
                 }
-                JSONObject njson = new JSONObject();
-                njson.put("data", amountOfCarsRegisteredByUser);
 
-                return ResponseEntity.status(HttpStatus.OK).body(njson);
+                return jsonFrom(amountOfCarsRegisteredByUser);
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return errorAccess();
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
             logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials();
         }
     }
 
@@ -121,8 +124,9 @@ public class AnalyticsController {
     )
     @GetMapping(value = "/vendors/cars/sold")
     public ResponseEntity<JSONObject> getNumberOfCarsSoldByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
+        json.clear();
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsSoldByUser;
@@ -134,17 +138,13 @@ public class AnalyticsController {
                     amountOfCarsSoldByUser =  profileRepository.findByOwnerCarsSold();
                 }
 
-                JSONObject njson = new JSONObject();
-                njson.put("data", amountOfCarsSoldByUser);
-
-                return ResponseEntity.status(HttpStatus.OK).body(njson);
+                return jsonFrom(amountOfCarsSoldByUser);
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return errorAccess();
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
             logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials();
         }
     }
 
@@ -158,8 +158,9 @@ public class AnalyticsController {
     )
     @GetMapping(value = "/vendors/cars/selling")
     public ResponseEntity<JSONObject> getNumberOfCarsOnSaleByVendor(HttpServletRequest request, @RequestParam(value = "limit", required=false) Integer limit){
+        json.clear();
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(auth).split(" ")[1];
             String email = jwtTokenUtil.getUsernameFromToken(token);
             Profile user = profileRepository.findByMail(email);
             List<Object> amountOfCarsOnSaleByUser;
@@ -170,18 +171,28 @@ public class AnalyticsController {
                 } else {
                     amountOfCarsOnSaleByUser =  profileRepository.findByOwnerCarsSelling();
                 }
-
-                JSONObject njson = new JSONObject();
-                njson.put("data", amountOfCarsOnSaleByUser);
-
-                return ResponseEntity.status(HttpStatus.OK).body(njson);
+                return jsonFrom(amountOfCarsOnSaleByUser);
             } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+                return errorAccess();
             }
         } catch (Exception e){
-            json.put("error", "Bad credentials");
             logger.error(e.toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+            return errorCredentials();
         }
+    }
+
+    private ResponseEntity<JSONObject> errorAccess() {
+        json.put(error, noAccess);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+
+    private ResponseEntity<JSONObject> errorCredentials() {
+        json.put(error, badCredentials);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
+    }
+
+    private ResponseEntity<JSONObject> jsonFrom(List<Object> list){
+        json.put("data", list);
+        return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }
