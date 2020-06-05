@@ -89,10 +89,10 @@ public class UsersController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
             }
         } catch (Exception e) {
+            logger.error(e.toString());
             json.put(error, badCredentials);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(json);
         }
     }
-
 
 }
