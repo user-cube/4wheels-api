@@ -16,12 +16,11 @@ import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.CarRepository;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
-
-import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(value = AnalyticsController.class)
@@ -36,8 +35,8 @@ public class AnalyticsControllerTest {
     private CarRepository carRepository;
     @MockBean
     private JwtTokenUtil jwtTokenUtil;
-    String accessToken = System.getenv("TEST_TOKEN");
-    String email = System.getenv("TESTER_EMAIL");
+    private String accessToken = System.getenv("TEST_TOKEN");
+    private String email = System.getenv("TESTER_EMAIL");
 
     @BeforeEach
     public void setUp() {
