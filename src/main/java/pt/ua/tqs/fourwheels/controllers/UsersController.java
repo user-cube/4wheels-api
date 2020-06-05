@@ -30,6 +30,7 @@ public class UsersController {
     private String error = "error";
     private String badCredentials = "Bad Credentials";
     private String noAccess = "No Access";
+    private String numPages = "totalpages";
 
     public UsersController(ProfileRepository profileRepository, JwtTokenUtil jwtTokenUtil){
         this.profileRepository = profileRepository;
@@ -59,7 +60,7 @@ public class UsersController {
                 List<Profile> userOfPage = userPage.getContent();
 
                 json.put("data", userOfPage);
-                json.put("totalpages", totalPages);
+                json.put(numPages, totalPages);
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
@@ -94,7 +95,7 @@ public class UsersController {
                 List<Profile> buyersPage = userPage.getContent();
 
                 json.put("data", buyersPage);
-                json.put("totalpages", totalPages);
+                json.put(numPages, totalPages);
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
@@ -129,7 +130,7 @@ public class UsersController {
                 List<Profile> buyersPage = userPage.getContent();
 
                 json.put("data", buyersPage);
-                json.put("totalpages", totalPages);
+                json.put(numPages, totalPages);
 
                 return ResponseEntity.status(HttpStatus.OK).body(json);
             } else {
