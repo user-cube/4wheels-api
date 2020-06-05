@@ -22,7 +22,7 @@ public class FavouriteController {
     private JwtTokenUtil jwtTokenUtil;
 
     private JSONObject json = new JSONObject();
-    private Logger logger = LogManager.getLogger(ProfileController.class);
+    private Logger logger = LogManager.getLogger(FavouriteController.class);
 
     private String auth = "Authorization";
     private String error = "error";
