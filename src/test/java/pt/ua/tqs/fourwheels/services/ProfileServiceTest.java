@@ -3,7 +3,6 @@ package pt.ua.tqs.fourwheels.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import pt.ua.tqs.fourwheels.entities.Profile;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertEquals;
@@ -12,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 class ProfileServiceTest {
     private ProfileService profileService;
     @BeforeEach
-    public void setup(){
+    public void setUp(){
         profileService = new ProfileService();
     }
     @Test
