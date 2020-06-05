@@ -40,6 +40,9 @@ public class CarController {
     private String price = "price";
     private String carState = "carState";
     private String year = "year";
+    private String selling = "selling";
+    private String totalpages = "totalpages";
+    private String authorization = "Authorization";
 
     public CarController(CarRepository carRepository, JwtTokenUtil jwtTokenUtil) {
         this.carRepository = carRepository;
@@ -72,13 +75,13 @@ public class CarController {
     public ResponseEntity<JSONObject> getAllCars(@RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
 
-        Page<Car> carPage =  carRepository.findCarsByCarStateEquals("selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByCarStateEquals(selling, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
 
     }
@@ -96,7 +99,7 @@ public class CarController {
 
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -139,7 +142,7 @@ public class CarController {
     public ResponseEntity<JSONObject> deleteCar(@PathVariable("id") int id,HttpServletRequest request){
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -167,13 +170,13 @@ public class CarController {
     @GetMapping(value = "/brand/{content}")
     public ResponseEntity<JSONObject>  searchByBrand(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        Page<Car> carPage =  carRepository.findCarsByBrandContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByBrandContainingAndCarStateEquals(content, selling, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
@@ -188,13 +191,13 @@ public class CarController {
     @GetMapping(value = "/model/{content}")
     public ResponseEntity<JSONObject> searchByModel(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        Page<Car> carPage =  carRepository.findCarsByModelContainingAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByModelContainingAndCarStateEquals(content, selling, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
@@ -209,13 +212,13 @@ public class CarController {
     @GetMapping(value = "/year/{content}")
     public ResponseEntity<JSONObject> searchByYear(@PathVariable("content") int content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        Page<Car> carPage =  carRepository.findCarsByYearEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByYearEqualsAndCarStateEquals(content, selling, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
@@ -230,13 +233,13 @@ public class CarController {
     @GetMapping(value = "/fuel/{content}")
     public ResponseEntity<JSONObject> searchByFuelType(@PathVariable("content") String content, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
         Pageable pageAndLimit = PageRequest.of(page, limit);
-        Page<Car> carPage =  carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, "selling", pageAndLimit);
+        Page<Car> carPage =  carRepository.findCarsByTypeOfFuelEqualsAndCarStateEquals(content, selling, pageAndLimit);
         int totalPages = carPage.getTotalPages();
         List<Car> cars = carPage.getContent();
 
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 
@@ -260,7 +263,7 @@ public class CarController {
 
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -325,7 +328,7 @@ public class CarController {
 
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -379,7 +382,7 @@ public class CarController {
 
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -412,7 +415,7 @@ public class CarController {
     )
     @GetMapping(value = "/vendor/selling")
     public ResponseEntity<JSONObject> getAllCarsOnSaleFromVendor(HttpServletRequest request, @RequestParam(value = "page", required=false) int page, @RequestParam(value = "limit", required=false) int limit){
-        return getAllCarsSoldOrSellingFromVendorFrame(request,page,limit,"selling");
+        return getAllCarsSoldOrSellingFromVendorFrame(request,page,limit,selling);
     }
 
     /**
@@ -435,7 +438,7 @@ public class CarController {
     private ResponseEntity<JSONObject> getAllCarsSoldOrSellingFromVendorFrame(HttpServletRequest request, int page, int limit,String carState){
         String email = "";
         try {
-            String token = request.getHeader("Authorization").split(" ")[1];
+            String token = request.getHeader(authorization).split(" ")[1];
             email = jwtTokenUtil.getUsernameFromToken(token);
             if(checkMail(email)) {
                 json.put(errorKey,errorMsg);
@@ -458,7 +461,7 @@ public class CarController {
         List<Car> cars = carPage.getContent();
         json.clear();
         json.put("data", cars);
-        json.put("totalpages", totalPages);
+        json.put(totalpages, totalPages);
         return ResponseEntity.status(HttpStatus.OK).body(json);
     }
 }
