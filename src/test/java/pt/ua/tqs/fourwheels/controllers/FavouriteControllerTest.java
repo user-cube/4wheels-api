@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Favourite;
-import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
 
 import java.util.ArrayList;
@@ -45,18 +44,6 @@ public class FavouriteControllerTest {
     String email = System.getenv("TESTER_EMAIL");
 
     private String auth = "Authorization";
-    private String type = "type";
-    private String name = "name";
-    private String mail = "mail";
-    private String contact = "contact";
-    private String address = "address";
-    private String zipCode = "zipCode";
-    private String city = "city";
-    private String nif = "nif";
-    private String photo = "photo";
-    private String error = "error";
-
-    private String bdCred = "Bad Credentials!";
 
     @BeforeEach
     public void setUp() {

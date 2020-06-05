@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import pt.ua.tqs.fourwheels.authentication.JwtTokenUtil;
 import pt.ua.tqs.fourwheels.entities.Favourite;
 import pt.ua.tqs.fourwheels.repositories.FavouriteRepository;
-import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/favourite")
@@ -27,17 +25,7 @@ public class FavouriteController {
     private Logger logger = LogManager.getLogger(ProfileController.class);
 
     private String auth = "Authorization";
-    private String type = "type";
-    private String name = "name";
-    private String mail = "mail";
-    private String contact = "contact";
-    private String address = "address";
-    private String zipCode = "zipCode";
-    private String city = "city";
-    private String nif = "nif";
-    private String photo = "photo";
     private String error = "error";
-
     private String bdCred = "Bad Credentials!";
 
 
@@ -55,7 +43,6 @@ public class FavouriteController {
     }
     )
     @GetMapping(value = "/")
-    //public List<Favourite> getFavourites(HttpServletRequest request){
     public ResponseEntity<JSONObject> getFavourites(HttpServletRequest request){
         String email = "";
         try {
@@ -63,7 +50,6 @@ public class FavouriteController {
             email = jwtTokenUtil.getUsernameFromToken(token);
             json.put("data", favouriteRepository.findAllByMail(email));
             return ResponseEntity.status(HttpStatus.OK).body(json);
-            //return favouriteRepository.findAllByMail(email);
         }catch (Exception e){
             logger.error(e.toString());
             json.put(error, bdCred);
@@ -116,7 +102,6 @@ public class FavouriteController {
             json.put("data", newFav);
             favouriteRepository.save(newFav);
             return ResponseEntity.status(HttpStatus.OK).body(json);
-            //return favouriteRepository.findAllByMail(email);
         }catch (Exception e){
             logger.error(e.toString());
             json.put(error, bdCred);
