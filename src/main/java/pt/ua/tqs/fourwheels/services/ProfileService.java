@@ -3,7 +3,6 @@ package pt.ua.tqs.fourwheels.services;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pt.ua.tqs.fourwheels.controllers.CarController;
 import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
