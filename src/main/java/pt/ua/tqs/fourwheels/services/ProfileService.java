@@ -19,6 +19,10 @@ public class ProfileService {
 
     @Transactional
     public Profile getUserById(int id){
-        return userRepository.findById(id).get();
+        try{
+            return userRepository.findById(id).get();
+        }catch(Exception e){
+            return new Profile();
+        }
     }
 }

@@ -116,42 +116,42 @@ class ProfileTest {
     @Test
     public void setName() {
         set.setName("DummyTest");
-        assertEquals(set.getName(), "DummyTest");
+        assertEquals("DummyTest",set.getName());
     }
 
     @Test
     public void setMail() {
         set.setMail("dummy@Test.This");
-        assertEquals(set.getMail(), "dummy@Test.This");
+        assertEquals("dummy@Test.This",set.getMail());
     }
 
     @Test
     public void setContact() {
         set.setContact(913913913);
-        assertEquals(set.getContact(), 913913913);
+        assertEquals(913913913,set.getContact());
     }
 
     @Test
     public void setAddress() {
         set.setAddress("Rua Falsa");
-        assertEquals(set.getAddress(), "Rua Falsa");
+        assertEquals("Rua Falsa",set.getAddress());
     }
 
     @Test
     public void setZipCode() {
         set.setZipCode("678798");
-        assertEquals(set.getZipCode(), "678798");
+        assertEquals("678798",set.getZipCode());
     }
 
     @Test
     public void setCity() {
         set.setCity("Nowhere");
-        assertEquals(set.getCity(), "Nowhere");
+        assertEquals("Nowhere",set.getCity());
     }
 
     @Test
     public void setNif() {
         set.setNif(555);
-        assertEquals(set.getNif(), 555);
+        assertEquals(555,set.getNif());
     }
 }
