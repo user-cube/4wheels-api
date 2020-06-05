@@ -23,13 +23,16 @@ public class ProfileService {
 
     @Transactional
     public Profile getUserById(int id){
+        Profile nullPf = new Profile();
+        nullPf.setName("null");
         try {
             Optional<Profile> pf = userRepository.findById(id);
-            return pf.get();
+            if(pf.isPresent()){
+                return pf.get();
+            }
+            return nullPf;
         }catch(Exception e) {
             logger.error(e.toString());
-            Profile nullPf = new Profile();
-            nullPf.setName("null");
             return nullPf;
         }
     }
