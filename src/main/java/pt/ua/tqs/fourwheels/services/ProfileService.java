@@ -6,6 +6,7 @@ import pt.ua.tqs.fourwheels.entities.Profile;
 import pt.ua.tqs.fourwheels.repositories.ProfileRepository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 public class ProfileService {
@@ -19,12 +20,8 @@ public class ProfileService {
 
     @Transactional
     public Profile getUserById(int id){
-        try{
-            return userRepository.findById(id).get();
-        }catch(Exception e){
-            Profile nullPf = new Profile();
-            nullPf.setName("null");
-            return nullPf;
-        }
+        Optional<Profile> profile = userRepository.findById(id);
+        return profile.orElse(null);
+
     }
 }
